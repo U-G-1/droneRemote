@@ -5,12 +5,17 @@ const dotenv = require('dotenv');
 dotenv.config();
 const indexRouter = require('./routes');
 const userRouter = require('./routes/user');
+const pyTestRouter = require('./routes/pyTest');
+
 
 const app = express();
+app.set('view engine', 'ejs');
+app.set('views', './views');
 app.set('port', process.env.port || 3000);
 
 app.use('/', indexRouter);
 app.use('/user', userRouter);
+app.use('/pyTest', pyTestRouter);
 
 app.use((req, res, next) => {
     res.status(404).send('Not Found');
