@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const dotenv = require('dotenv');
+const nunjucks = require('nunjucks');
 
 dotenv.config();
 const indexRouter = require('./routes');
@@ -12,6 +13,11 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', './views');
 app.set('port', process.env.port || 3000);
+// app.set('view engine', 'html');
+// nunjucks.configure('./views', {
+//     express: app,
+//     watch: true,
+// });
 
 app.use('/', indexRouter);
 app.use('/user', userRouter);

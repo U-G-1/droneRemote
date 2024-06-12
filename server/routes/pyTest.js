@@ -9,7 +9,7 @@ let num1 = 10
 let num2 = 10
 
 const result = spawn('python', ['pyCode/test.py', num1, num2]);
-let res
+let rs
 
 result.stdout.on('data', function (data) {
     rs = iconv.decode(data, 'euc-kr');
