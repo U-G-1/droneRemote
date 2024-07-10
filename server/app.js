@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const dotenv = require('dotenv');
 const nunjucks = require('nunjucks');
+const {sequelize} = require('./models');
 
 dotenv.config();
 const indexRouter = require('./routes');
@@ -18,6 +19,15 @@ app.set('port', process.env.port || 3000);
 //     express: app,
 //     watch: true,
 // });
+
+sequelize.sync({ force: false })
+    .then(() => {
+        console.log('데이터베이스 연결 성공');
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+
 
 app.use('/', indexRouter);
 app.use('/user', userRouter);

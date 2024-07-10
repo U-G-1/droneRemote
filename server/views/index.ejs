@@ -11,8 +11,17 @@
             <label for="input2">Input 2:</label>
             <input type="text" id="input2" name="input2" required>
             <br>
+            <label for="input3">Input 3:</label>
+            <input type="text" id="input2" name="input2" required>
+            <br>
+            <button type="submit">Submit</button>
         </form>
-        <p>Result : <%= number %></p>
-        
+
+        <h1>Python Script Location Output</h1>
+        <ul>
+            <% numbers.forEach((number, index) => { %>
+                <li>loc<%= index + 1 %>: <%= number %></li>
+            <% }); %>
+        </ul>
     </body>
 </html>
