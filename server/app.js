@@ -3,11 +3,13 @@ const path = require('path');
 const dotenv = require('dotenv');
 const nunjucks = require('nunjucks');
 const {sequelize} = require('./models');
+const bodyParser = require('body-parser');
 
 dotenv.config();
 const indexRouter = require('./routes');
 const userRouter = require('./routes/user');
 const pyTestRouter = require('./routes/pyTest');
+const locaRouter = require('./routes/location');
 
 
 const app = express();
@@ -32,6 +34,7 @@ sequelize.sync({ force: false })
 app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/pyTest', pyTestRouter);
+app.use('/location', locaRouter);
 
 app.use((req, res, next) => {
     res.status(404).send('Not Found');

@@ -28,6 +28,14 @@ module.exports = (sequelize) => {
         type: DataTypes.FLOAT,
         allowNull: false,
       },
+      slope: {
+        type: DataTypes.FLOAT,
+      },
+      chim_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
       
     },
     {
