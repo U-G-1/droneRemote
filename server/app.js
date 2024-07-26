@@ -30,6 +30,9 @@ sequelize.sync({ force: false })
         console.log(err);
     });
 
+    // Body parser middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.use('/', indexRouter);
 app.use('/user', userRouter);

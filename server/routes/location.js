@@ -1,35 +1,31 @@
-
 const express = require('express');
+const { exec } = require('child_process');
 const router = express.Router();
-const bodyParser = require('body-parser');
 
-// body-parser 미들웨어 설정
-router.use(bodyParser.urlencoded({ extended: true }));
-router.use(bodyParser.json());
-
-
+// GET 요청 시 location.ejs를 렌더링
 router.get('/', (req, res) => {
     res.render('location');
-    // res.send('Hello, loca');
 });
 
+// POST 요청 시 파이썬 스크립트를 실행
+router.post('/execute', (req, res) => {
+    console.log('드론 이동 실행');
+    const chimney = req.body.chimney;
+    console.log('굴뚝 번호: ', req.body.chimney);
+    const scriptPath = `pyCode/drone_test.py ${chimney}`;
 
-router.post('/process1', (req, res) => {
-    console.log('Process 1 호출 성공');
-    console.log('input data:', req.body);
-    res.json({ redirect: '/' });
-});
-
-router.post('/process2', (req, res) => {
-    console.log('Process 2 호출 성공');
-    console.log('input data:', req.body);
-    res.json({ redirect: '/' });
-});
-
-router.post('/process3', (req, res) => {
-    console.log('Process 3 호출 성공');
-    console.log('input data:', req.body);
-    res.json({ redirect: '/' });
+    exec(`python ${scriptPath}`, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Error executing script: ${error}`);
+            return res.status(500).send(`Error: ${error.message}`);
+        }
+        if (stderr) {
+            console.error(`Script stderr: ${stderr}`);
+            return res.status(500).send(`Script stderr: ${stderr}`);
+        }
+        console.log(`Script stdout: ${stdout}`);
+        res.send(`Script executed successfully: ${stdout}`);
+    });
 });
 
 module.exports = router;

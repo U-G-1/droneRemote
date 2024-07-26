@@ -1,48 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Button Test</title>
-    <style>
-        .button-container {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 50px;
-        }
-        .button {
-            padding: 20px 40px;
-            font-size: 16px;
-            border: 2px solid #000;
-            border-radius: 5px;
-            background-color: #f0f0f0;
-            cursor: pointer;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chimney Selection</title>
 </head>
 <body>
-    <div class="button-container">
-        <button class="button" onclick="sendRequest('/process1')">location 1</button>
-        <button class="button" onclick="sendRequest('/process2')">location 2</button>
-        <button class="button" onclick="sendRequest('/process3')">location 3</button>
-    </div>
-
-    <script>
-        function sendRequest(endpoint) {
-            fetch(endpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ data: 'test' })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.redirect) {
-                    window.location.href = data.redirect;
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        }
-    </script>
+    <h1>Select a Chimney</h1>
+    <form action="/location/execute" method="post">
+        <input type="radio" id="chimney1" name="chimney" value="1" required>
+        <label for="chimney1">Chimney 1</label><br>
+        <input type="radio" id="chimney2" name="chimney" value="2">
+        <label for="chimney2">Chimney 2</label><br>
+        <input type="radio" id="chimney3" name="chimney" value="3">
+        <label for="chimney3">Chimney 3</label><br><br>
+        <button type="submit">이동</button>
+    </form>
 </body>
 </html>
