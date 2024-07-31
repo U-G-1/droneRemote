@@ -1,5 +1,6 @@
 const express = require('express');
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
+const path = require('path');
 const router = express.Router();
 
 // GET 요청 시 location.ejs를 렌더링
@@ -11,20 +12,31 @@ router.get('/', (req, res) => {
 router.post('/execute', (req, res) => {
     console.log('드론 이동 실행');
     const chimney = req.body.chimney;
-    console.log('굴뚝 번호: ', req.body.chimney);
-    const scriptPath = `pyCode/drone_test.py ${chimney}`;
+    console.log('굴뚝 번호: ', chimney);
 
-    exec(`python ${scriptPath}`, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error executing script: ${error}`);
-            return res.status(500).send(`Error: ${error.message}`);
+    // 파이썬 스크립트 경로 설정
+    const scriptPath = path.join(__dirname, '..', 'pyCode', 'drone_test.py');
+
+    // 파이썬 스크립트를 spawn으로 실행 매개변수 : chimney
+    const pythonProcess = spawn('python', [scriptPath, chimney]);
+
+    // 스크립트 실행 중 표준 출력 처리
+    pythonProcess.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+    });
+
+    // 스크립트 실행 중 표준 오류 처리
+    pythonProcess.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+    });
+
+    // 스크립트 실행 종료 시 처리
+    pythonProcess.on('close', (code) => {
+        if (code === 0) {
+            res.send('Script executed successfully');
+        } else {
+            res.status(500).send(`Script failed with code ${code}`);
         }
-        if (stderr) {
-            console.error(`Script stderr: ${stderr}`);
-            return res.status(500).send(`Script stderr: ${stderr}`);
-        }
-        console.log(`Script stdout: ${stdout}`);
-        res.send(`Script executed successfully: ${stdout}`);
     });
 });
 
