@@ -38,7 +38,7 @@ const iconv = require('iconv-lite');
 function getPythonData() {
     return new Promise((resolve, reject) => {
         const args = [11, 12, 13]; // 전달할 인자
-        const pythonProcess = spawn('python', ['pyCode/test.py', ...args]);
+        const pythonProcess = spawn('python3', ['pyCode/test.py', ...args]);
 
         let output = '';
         pythonProcess.stdout.on('data', (data) => {
