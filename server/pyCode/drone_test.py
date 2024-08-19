@@ -17,15 +17,6 @@ async def run():
             print(f"Drone discovered!")
             break
 
-    print("Waiting for drone to have a global position estimate...")
-    async for health in drone.telemetry.health():
-        if health.is_global_position_ok:
-            print("Global position estimate ok")
-            break
-    print("Fetching amsl altitude at home location....")
-    async for terrain_info in drone.telemetry.home():
-        absolute_altitude = terrain_info.absolute_altitude_m
-        break        
 
     print("-- Arming")
     await drone.action.arm()
