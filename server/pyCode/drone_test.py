@@ -48,13 +48,13 @@ async def run():
     print("-- Go 0m North, 0m East, -10m Down \
             within local coordinate system")
     await drone.offboard.set_position_ned(
-            PositionNedYaw(0.0, 0.0, -0.5, 0.0))
+            PositionNedYaw(0.0, 0.0, -10.0, 0.0))
     await asyncio.sleep(10)
     
     print("-- Go 10m North, 0m East, -10m Down \
             within local coordinate system Go Straight")
     await drone.offboard.set_position_ned(
-            PositionNedYaw(10.0, 0.0, -0.5, 0.0))
+            PositionNedYaw(10.0, 0.0, -10.0, 0.0))
     await asyncio.sleep(15)
     
     print("-- return home\
