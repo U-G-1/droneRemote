@@ -92,7 +92,8 @@ async def run():
     print("Drone is disarmed and the script is done.")
 
 if __name__ == "__main__":
+    printArgs(x,y,z)
     loop = asyncio.get_event_loop()
     loop.run_until_complete(run())
 
-    printArgs(x,y,z)
+    
