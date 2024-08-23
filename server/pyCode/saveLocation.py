@@ -29,8 +29,8 @@ z = ""
 async def run():
 
     drone = System()
-    await drone.connect(system_address="udp://:14540")
-    #await drone.connect(system_address="serial///dev/ttyUSB0:921600")
+    #await drone.connect(system_address="udp://:14540")
+    await drone.connect(system_address="serial///dev/ttyUSB0:921600")
 
     print("Waiting for drone to connect...")
     async for state in drone.core.connection_state():
