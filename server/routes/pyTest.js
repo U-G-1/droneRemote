@@ -78,7 +78,6 @@ router.get('/', async (req, res) => {
 
 router.post('/process', async (req, res, next) => {
     console.log('process 호출 성공');
-    console.log('input data : ', req.body);
     res.redirect('/pyTest');
 });
 
