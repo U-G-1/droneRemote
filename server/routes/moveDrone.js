@@ -54,7 +54,7 @@ router.post('/move',async (req, res) => {
     // 스크립트 실행 종료 시 처리
     pythonProcess.on('close', (code) => {
         if (code === 0) {
-            res.send('Script executed successfully');
+            res.redirect('/moveDrone');
         } else {
             res.status(500).send(`Script failed with code ${code}`);
         }

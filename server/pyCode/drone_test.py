@@ -10,8 +10,7 @@ from mavsdk.offboard import (OffboardError, PositionNedYaw)
 
 async def run():
     drone = System()
-    await drone.connect(system_address="udp://:14540") #시뮬레이션 용 연결 코드
-    #await drone.connect(system_address="serial///dev/ttyUSB0:921600") 드론용 연결 코드
+    await drone.connect(system_address="udp://:14540")
 
     print("Waiting for drone to connect...")
     async for state in drone.core.connection_state():
@@ -49,13 +48,13 @@ async def run():
     print("-- Go 0m North, 0m East, -10m Down \
             within local coordinate system")
     await drone.offboard.set_position_ned(
-            PositionNedYaw(0.0, 0.0, -1.0, 0.0))
+            PositionNedYaw(0.0, 0.0, -0.5, 0.0))
     await asyncio.sleep(10)
     
     print("-- Go 10m North, 0m East, -10m Down \
             within local coordinate system Go Straight")
     await drone.offboard.set_position_ned(
-            PositionNedYaw(10.0, 0.0, .0, 0.0))
+            PositionNedYaw(10.0, 0.0, -0.5, 0.0))
     await asyncio.sleep(15)
     
     print("-- return home\
@@ -70,12 +69,7 @@ async def run():
     except OffboardError as error:
         print(f"Stopping offboard mode failed \
                 with error code: {error._result.result}")
-    
-    print("-- Disarming the drone")
-    await drone.action.disarm()
-
-    print("Drone is disarmed and the script is done.")
-
+        
 if __name__ == "__main__":
     # Run the asyncio loop
     asyncio.run(run())
