@@ -4,7 +4,7 @@
         <title>Node.js Child-process Test</title>
     </head>
     <body>
-        <form action="/pyTest/process" method="POST">
+        <!-- <form action="/pyTest/process" method="POST">
             <label for="input1">Input 1:</label>
             <input type="text" id="input1" name="input1" required>
             <br>
@@ -15,12 +15,12 @@
             <input type="text" id="input3" name="input3" required>
             <br>
             <button type="submit">Submit</button>
-        </form>
+        </form> -->
 
         <h1>Python Script Location Output</h1>
         <ul>
-            <% numbers.forEach((number, index) => { %>
-                <li>loc<%= index + 1 %>: <%= number %></li>
+            <% values.forEach(value => { %>
+                <li><%= value %></li>
             <% }); %>
         </ul>
     </body>

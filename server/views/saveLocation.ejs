@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>좌표 저장</title>
+</head>
+<body>
+    <h1>좌표 저장</h1>
+    <ul>
+        <% values.forEach(value => { %>
+            <li><%= value %></li>
+        <% }); %>
+    </ul>
+    <form action="saveLocation/save" method="POST">
+    <div>
+        <label for="chimney">Select Chimney:</label>
+        <select name="chim_name" id="chimney">
+            <option value="굴뚝1">굴뚝1</option>
+            <option value="굴뚝2">굴뚝2</option>
+            <option value="굴뚝3">굴뚝3</option>
+        </select>
+    </div>
+    <button type="submit">Save</button>
+</form>
+</body>
+</html>
