@@ -37,14 +37,13 @@ async def run():
         if state.is_connected:
             print(f"Drone discovered!")
             break
-
-    print("-- Setting initial setpoint")
-    await drone.offboard.set_position_ned(PositionNedYaw(0.0, 0.0, 0.0, 0.0))
     
     print("-- Arming")
     await drone.action.arm()
+    await asyncio.sleep(3)
 
-    await asyncio.sleep(5)
+    print("-- Setting initial setpoint")
+    await drone.offboard.set_position_ned(PositionNedYaw(0.0, 0.0, 0.0, 0.0))
 
     print("-- Starting offboard")
     try:
@@ -58,20 +57,22 @@ async def run():
 
     print(" #1 위로 올라가서 좌표 출력")
     await drone.offboard.set_position_ned(
-            PositionNedYaw(0.0, 0.0, -5.0, 0.0))
+            PositionNedYaw(0.0, 0.0, -1.0, 0.0))
     
-    await asyncio.sleep(10)
+    await asyncio.sleep(5)
 
     position = await get_position(drone)
     x = position.latitude_deg
     y = position.longitude_deg
     z = position.relative_altitude_m
 
+    print(f"  Position - {x} m, {y} m, {z} m")
+
     print("-- return home\
           #1 Set the original coordinate to 0 ") # 아예 좌표를 0으로 처리
     await drone.offboard.set_position_ned(
             PositionNedYaw(0.0, 0.0, 0.0, 0.0))
-    await asyncio.sleep(10)
+    await asyncio.sleep(5)
 
     print("-- Stopping offboard")
     try:
