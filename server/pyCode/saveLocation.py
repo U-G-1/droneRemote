@@ -2,7 +2,6 @@
 
 #------------------------------------------------------------------------------
 #   서버 전송 테스트
-#  
 #------------------------------------------------------------------------------
 
 import asyncio
@@ -30,8 +29,8 @@ z = ""
 async def run():
 
     drone = System()
-    await drone.connect(system_address="udp://:14540") #시뮬레이션 용 연결 코드
-    #await drone.connect(system_address="serial///dev/ttyUSB0:921600") 드론용 연결 코드
+    await drone.connect(system_address="udp://:14540")
+    #await drone.connect(system_address="serial///dev/ttyUSB0:921600")
 
     print("Waiting for drone to connect...")
     async for state in drone.core.connection_state():
@@ -75,6 +74,10 @@ async def run():
             PositionNedYaw(0.0, 0.0, 0.0, 0.0))
     await asyncio.sleep(5)
 
+    print("-- Landing")
+    await drone.action.land()
+    await asyncio.sleep(5)
+
     print("-- Stopping offboard")
     try:
         await drone.offboard.stop()
@@ -82,7 +85,8 @@ async def run():
         print(f"Stopping offboard mode failed \
                 with error code: {error._result.result}")
            
-    print("-- Disarming the drone")
+    await asyncio.sleep(10)
+    print("-- Disarming the drone")  #추가
     await drone.action.disarm()
 
     print("Drone is disarmed and the script is done.")
