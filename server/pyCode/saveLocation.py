@@ -2,6 +2,7 @@
 
 #------------------------------------------------------------------------------
 #   서버 전송 테스트
+#  
 #------------------------------------------------------------------------------
 
 import asyncio
@@ -29,8 +30,8 @@ z = ""
 async def run():
 
     drone = System()
-    #await drone.connect(system_address="udp://:14540")
-    await drone.connect(system_address="serial///dev/ttyUSB0:921600")
+    await drone.connect(system_address="udp://:14540") #시뮬레이션 용 연결 코드
+    #await drone.connect(system_address="serial///dev/ttyUSB0:921600") 드론용 연결 코드
 
     print("Waiting for drone to connect...")
     async for state in drone.core.connection_state():
