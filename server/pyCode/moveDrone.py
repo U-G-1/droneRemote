@@ -64,7 +64,7 @@ async def run():
     print(f" 서버로부터 받은 좌표 ({float_x}, {float_y}, {float_z})")
     
     await drone.action.goto_location(float_x, float_y, float_z, 0)
-    await asyncio.sleep(10)
+    await asyncio.sleep(15)
     
     #await wait_until_reached_global_position(drone, float_x, float_y, float_z)
     #await asyncio.sleep(5)
@@ -76,7 +76,7 @@ async def run():
 
     print("-- Landing")
     await drone.action.land()
-    await asyncio.sleep(10)
+    await asyncio.sleep(15)
 
     print("-- Disarming the drone")  #추가
     await drone.action.disarm()
