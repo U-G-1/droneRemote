@@ -42,9 +42,10 @@ async def run():
         return
     
     try:
-        float_x = sys.argv[1]
-        float_y = sys.argv[2]
-        float_z = sys.argv[3]
+        # sys.argv로부터 값을 받아와서 float으로 변환
+        float_x = float(sys.argv[1])
+        float_y = float(sys.argv[2])
+        float_z = float(sys.argv[3])
     except ValueError:
         print("올바른 숫자 형식이 아닙니다.")
     
