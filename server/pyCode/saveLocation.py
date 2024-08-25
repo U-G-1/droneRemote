@@ -40,8 +40,8 @@ async def run():
     await drone.action.takeoff()
     await asyncio.sleep(10)
 
-    await wait_until_altitude_reached(drone, target_altitude=1.0)
-    await asyncio.sleep(5)
+    #await wait_until_altitude_reached(drone, target_altitude=1.0)
+    #await asyncio.sleep(5)
 
     current_x, current_y = await get_xy(drone)
     current_z = await get_z(drone)
