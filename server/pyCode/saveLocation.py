@@ -53,8 +53,8 @@ async def run():
     await drone.action.goto_location(current_x, current_y, t_z, 0)
     await asyncio.sleep(10)
     
-    await wait_until_reached_global_position(drone, current_x, current_y, current_z)
-    await asyncio.sleep(5)
+    """await wait_until_reached_global_position(drone, current_x, current_y, current_z)
+    await asyncio.sleep(5)"""
 
     current_x, current_y = await get_xy(drone)
     current_z = await get_z(drone)
@@ -67,8 +67,8 @@ async def run():
     await drone.action.disarm()
 
 async def wait_until_altitude_reached(drone, target_altitude, tolerance=0.5):
-    async for position in drone.telemetry.position():
-        current_alt = position.relative_altitude_m
+    async for home in drone.telemetry.home():
+        current_alt = home.absolute_altitude_m
         alt_diff = abs(current_alt - target_altitude)
 
         if alt_diff <= tolerance:
@@ -77,6 +77,10 @@ async def wait_until_altitude_reached(drone, target_altitude, tolerance=0.5):
         await asyncio.sleep(1)  # 1초마다 고도 확인
 
 async def wait_until_reached_global_position(drone, target_lat, target_lon, target_alt, tolerance=0.5):
+    """
+    드론이 목표 위치에 도달할 때까지 대기하는 함수
+    """
+    print("Waiting for the drone to reach the target position...")
     async for position in drone.telemetry.position():
         current_lat = position.latitude_deg
         current_lon = position.longitude_deg

@@ -8,6 +8,19 @@ import asyncio
 import sys
 from mavsdk import System
 from mavsdk.offboard import (OffboardError, PositionNedYaw)
+    
+async def get_xy(drone):
+    async for position in drone.telemetry.position():
+        return position.latitude_deg, position.longitude_deg
+    
+async def get_z(drone):
+    async for home in drone.telemetry.home():
+        return home.absolute_altitude_m
+    
+def printArgs(n1,n2,n3):
+    print(n1)
+    print(n2)
+    print(n3)
 
 async def run():
     drone = System()
@@ -28,41 +41,84 @@ async def run():
     print("-- Arming")
     await drone.action.arm()
     
-    print("-- Setting initial setpoint")
-    await drone.offboard.set_position_ned(PositionNedYaw(0.0, 0.0, 0.0, 0.0))
+    print("-- Taking off")
+    await drone.action.takeoff()
+    await asyncio.sleep(10)
 
-    print("-- Starting offboard")
-    try:
-        await drone.offboard.start()
-    except OffboardError as error:
-        print(f"Starting offboard mode failed \
-                with error code: {error._result.result}")
-        print("-- Disarming")
-        await drone.action.disarm()
-        return
+   # await wait_until_altitude_reached(drone, target_altitude=1.0)
+    #await asyncio.sleep(5)
+
+    current_x, current_y = await get_xy(drone)
+    current_z = await get_z(drone)
+    
+    print(f"  이동 전 GPS: ({current_x}, {current_y}, {current_z})")
+    # 드론을 특정 글로벌 좌표로 이동
     
     try:
-        # sys.argv로부터 값을 받아와서 float으로 변환
         float_x = float(sys.argv[1])
         float_y = float(sys.argv[2])
         float_z = float(sys.argv[3])
     except ValueError:
         print("올바른 숫자 형식이 아닙니다.")
+
+    print(f" 서버로부터 받은 좌표 ({float_x}, {float_y}, {float_z})")
     
-    print("-- Go 0m North, 0m East, -1m Down \
-            within local coordinate system")
-    await drone.offboard.set_position_ned(
-            PositionNedYaw(float_x, float_y, float_z, 0.0))
-    await asyncio.sleep(5)
+    await drone.action.goto_location(float_x, float_y, float_z, 0)
+    await asyncio.sleep(10)
+    
+    #await wait_until_reached_global_position(drone, float_x, float_y, float_z)
+    #await asyncio.sleep(5)
+
+    current_x, current_y = await get_xy(drone)
+    current_z = await get_z(drone)
+
+    print(f"  이동 후 GPS: ({current_x}, {current_y}, {current_z})")
 
     print("-- Landing")
     await drone.action.land()
     await asyncio.sleep(10)
-    
+
     print("-- Disarming the drone")  #추가
     await drone.action.disarm()
 
     print("Drone is disarmed and the script is done.")
+
+async def wait_until_altitude_reached(drone, target_altitude, tolerance=0.5):
+    """
+    드론이 목표 고도에 도달할 때까지 대기하는 함수
+    """
+    print("Waiting for the drone to reach the target altitude...")
+    async for position in drone.telemetry.position():
+        current_alt = position.relative_altitude_m
+        alt_diff = abs(current_alt - target_altitude)
+
+        if alt_diff <= tolerance:
+            print("Target altitude reached!")
+            break
+
+        await asyncio.sleep(1)  # 1초마다 고도 확인
+
+async def wait_until_reached_global_position(drone, target_lat, target_lon, target_alt, tolerance=0.5):
+    """
+    드론이 목표 위치에 도달할 때까지 대기하는 함수
+    """
+    print("Waiting for the drone to reach the target position...")
+    async for position in drone.telemetry.position():
+        current_lat = position.latitude_deg
+        current_lon = position.longitude_deg
+
+    async for home in drone.telemetry.home():
+        current_alt = home.absolute_altitude_m
+
+        lat_diff = abs(current_lat - target_lat)
+        lon_diff = abs(current_lon - target_lon)
+        alt_diff = abs(current_alt - target_alt)
+
+        if lat_diff <= tolerance and lon_diff <= tolerance and alt_diff <= tolerance:
+            print("Target position reached!")
+            break
+
+        await asyncio.sleep(0.5)  # 1초마다 위치 확인
         
 if __name__ == "__main__":
     # Run the asyncio loop
