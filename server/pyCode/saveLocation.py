@@ -7,12 +7,15 @@
 import asyncio
 from mavsdk import System
 from mavsdk.offboard import (OffboardError, PositionNedYaw)
-
-async def get_position_ned(drone):
-    async for position_velocity_ned in drone.telemetry.position_velocity_ned():
-        position = position_velocity_ned.position
-        return position.north_m, position.east_m, position.down_m
-
+    
+async def get_xy(drone):
+    async for position in drone.telemetry.position():
+        return position.latitude_deg, position.longitude_deg
+    
+async def get_z(drone):
+    async for home in drone.telemetry.home():
+        return home.absolute_altitude_m
+    
 def printArgs(n1,n2,n3):
     print(n1)
     print(n2)
@@ -24,7 +27,7 @@ async def run():
 
     async for state in drone.core.connection_state():
         if state.is_connected:
-            flaat = True        
+            flag = True
             break
 
     async for health in drone.telemetry.health():
@@ -33,28 +36,63 @@ async def run():
             break
 
     await drone.action.arm()
-
-    await drone.offboard.set_position_ned(PositionNedYaw(0.0, 0.0, 0.0, 0.0))
-
-    try:
-        await drone.offboard.start()
-    except OffboardError as error:
-        await drone.action.disarm()
-        return
-
-    await drone.offboard.set_position_ned(
-            PositionNedYaw(0.0, 0.0, -5.0, 0.0))
+    
+    await drone.action.takeoff()
     await asyncio.sleep(10)
 
-    current_x, current_y, current_z = await get_position_ned(drone)
+    await wait_until_altitude_reached(drone, target_altitude=1.0)
+    await asyncio.sleep(5)
+
+    current_x, current_y = await get_xy(drone)
+    current_z = await get_z(drone)
+    
+    # 드론을 특정 글로벌 좌표로 이동
+    
+    t_z = current_z + 5.0
+    
+    await drone.action.goto_location(current_x, current_y, t_z, 0)
+    await asyncio.sleep(10)
+    
+    await wait_until_reached_global_position(drone, current_x, current_y, current_z)
+    await asyncio.sleep(5)
+
+    current_x, current_y = await get_xy(drone)
+    current_z = await get_z(drone)
 
     printArgs(current_x, current_y, current_z)
 
     await drone.action.land()
-    await asyncio.sleep(15)
+    await asyncio.sleep(10)
 
     await drone.action.disarm()
 
+async def wait_until_altitude_reached(drone, target_altitude, tolerance=0.5):
+    async for position in drone.telemetry.position():
+        current_alt = position.relative_altitude_m
+        alt_diff = abs(current_alt - target_altitude)
+
+        if alt_diff <= tolerance:
+            break
+
+        await asyncio.sleep(1)  # 1초마다 고도 확인
+
+async def wait_until_reached_global_position(drone, target_lat, target_lon, target_alt, tolerance=0.5):
+    async for position in drone.telemetry.position():
+        current_lat = position.latitude_deg
+        current_lon = position.longitude_deg
+
+    async for home in drone.telemetry.home():
+        current_alt = home.absolute_altitude_m
+
+        lat_diff = abs(current_lat - target_lat)
+        lon_diff = abs(current_lon - target_lon)
+        alt_diff = abs(current_alt - target_alt)
+
+        if lat_diff <= tolerance and lon_diff <= tolerance and alt_diff <= tolerance:
+            break
+
+        await asyncio.sleep(0.5)  # 1초마다 위치 확인
+        
 if __name__ == "__main__":
     # Run the asyncio loop
     loop = asyncio.get_event_loop()
