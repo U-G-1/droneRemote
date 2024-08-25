@@ -44,7 +44,7 @@ router.get('/', (req, res) => {
             await Location.create({
                 loca_x: x,
                 loca_y: y,
-                loca_z: y,
+                loca_z: z,
                 slope: 0, // slope 값을 0으로 설정
                 chim_name: chim_name,
             });
