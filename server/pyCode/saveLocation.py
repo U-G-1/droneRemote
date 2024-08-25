@@ -48,7 +48,7 @@ async def run():
     
     # 드론을 특정 글로벌 좌표로 이동
     
-    t_z = current_z + 15.0
+    t_z = current_z + 8.0
     
     await drone.action.goto_location(current_x, current_y, t_z, 0)
     await asyncio.sleep(15)
