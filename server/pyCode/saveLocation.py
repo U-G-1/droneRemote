@@ -43,8 +43,8 @@ async def run():
         return
 
     await drone.offboard.set_position_ned(
-            PositionNedYaw(0.0, 0.0, -1.0, 0.0))
-    await asyncio.sleep(5)
+            PositionNedYaw(0.0, 0.0, -5.0, 0.0))
+    await asyncio.sleep(10)
 
     current_x, current_y, current_z = await get_position_ned(drone)
 
