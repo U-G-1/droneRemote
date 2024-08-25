@@ -48,8 +48,8 @@ router.get('/', (req, res) => {
                 slope: 0, // slope 값을 0으로 설정
                 chim_name: chim_name,
             });
-    
-            res.redirect('/saveLocation');
+            // 저장 완료 후 /saveLocation 페이지로 메시지와 함께 리디렉션
+            res.redirect('/index');
         } catch (err) {
             console.error('Error saving location:', err);
             res.status(500).send('Error saving location');
