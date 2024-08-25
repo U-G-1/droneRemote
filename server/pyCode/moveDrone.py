@@ -25,11 +25,6 @@ async def run():
             print("-- Global position state is good enough for flying.")
             break
 
-    """print("Fetching amsl altitude at home location....")
-    async for terrain_info in drone.telemetry.home():
-        absolute_altitude = terrain_info.absolute_altitude_m
-        break"""
-
     print("-- Arming")
     await drone.action.arm()
     
@@ -46,41 +41,23 @@ async def run():
         await drone.action.disarm()
         return
     
-    get_x = sys.argv[1]
-    get_y = sys.argv[2]
-    get_z = sys.argv[3]
-
     try:
         float_x = sys.argv[1]
         float_y = sys.argv[2]
         float_z = sys.argv[3]
     except ValueError:
         print("올바른 숫자 형식이 아닙니다.")
-
-    print("-- Go 0m North, 0m East, -10m Down \
+    
+    print("-- Go 0m North, 0m East, -1m Down \
             within local coordinate system")
     await drone.offboard.set_position_ned(
             PositionNedYaw(float_x, float_y, float_z, 0.0))
     await asyncio.sleep(5)
 
-    print("-- return home\
-          #1 Set the original coordinate to 0 ") # 아예 좌표를 0으로 처리
-    await drone.offboard.set_position_ned(
-            PositionNedYaw(0.0, 0.0, 0.0, 0.0))
-    await asyncio.sleep(5)
-
     print("-- Landing")
     await drone.action.land()
-    await asyncio.sleep(5)
-
-    print("-- Stopping offboard")
-    try:
-        await drone.offboard.stop()
-    except OffboardError as error:
-        print(f"Stopping offboard mode failed \
-                with error code: {error._result.result}")
-    
     await asyncio.sleep(10)
+    
     print("-- Disarming the drone")  #추가
     await drone.action.disarm()
 
