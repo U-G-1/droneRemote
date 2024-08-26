@@ -55,20 +55,11 @@ async def run():
 
     print("-- Arming")
     await drone.action.arm()
-    
+    await asyncio.sleep(3)
+
     print("-- Taking off")
     await drone.action.takeoff()
-    await asyncio.sleep(10)
-
-    # await wait_until_altitude_reached(drone, target_altitude=1.0)
     await asyncio.sleep(5)
-
-    current_x, current_y = await get_xy(drone)
-    current_ab_z = await get_z(drone)
-    current_re_z = await get_d_z(drone)
-    
-    print(f"  이동 전 GPS: ({current_x}, {current_y}, home 절대: {current_ab_z}, pos 올라간고도 {current_re_z})")
-    # 드론을 특정 글로벌 좌표로 이동
 
     try:
         float_x = float(sys.argv[1])
@@ -77,25 +68,14 @@ async def run():
     except ValueError:
         print("올바른 숫자 형식이 아닙니다.")
 
-    print(f"  서버로부터 받은 좌표 / {float_x}, {float_y}, {float_z } )")
+    print(f"  서버로부터 받은 좌표 / {float_x}, {float_y}, {float_z} )")
     
     await drone.action.goto_location(float_x, float_y, float_z, 0)
     await asyncio.sleep(10)
-    
-    """await wait_until_reached_global_position(drone, current_x, current_y, t)
-    await asyncio.sleep(5)"""
-
-    current_x, current_y = await get_xy(drone)
-    current_ab_z = await get_z(drone)
-    current_re_z = await get_d_z(drone)
-    current_total_z = await calculate_absolute_altitude(drone)
-
-    print(f"  이동 후 GPS: ({current_x}, {current_y}, {current_total_z})")
-    print(f"                home 절대: {current_ab_z}, pos 올라간고도 {current_re_z})")
 
     print("-- Landing")
     await drone.action.land()
-    await asyncio.sleep(15)
+    await asyncio.sleep(10)
 
     print("-- Disarming the drone")  #추가
     await drone.action.disarm()
