@@ -17,19 +17,19 @@ module.exports = (sequelize) => {
         primaryKey: true,
       },
       loca_x: {
-        type: DataTypes.FLOAT,
+        type: DataTypes.DECIMAL(40, 20),
         allowNull: false,
       },
       loca_y: {
-        type: DataTypes.FLOAT,
+        type: DataTypes.DECIMAL(40, 20),
         allowNull: false,
       },
       loca_z: {
-        type: DataTypes.FLOAT,
+        type: DataTypes.DECIMAL(40, 20),
         allowNull: false,
       },
       slope: {
-        type: DataTypes.FLOAT,
+        type: DataTypes.DECIMAL(40, 20),
       },
       chim_name: {
         type: DataTypes.STRING,

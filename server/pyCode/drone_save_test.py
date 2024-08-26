@@ -50,11 +50,6 @@ async def run():
     current_total_z = await calculate_absolute_altitude(drone)
 
     printArgs(current_x, current_y, current_total_z)
-
-    await drone.action.land()
-    await asyncio.sleep(15)
-
-    await drone.action.disarm()
       
 if __name__ == "__main__":
     # Run the asyncio loop
