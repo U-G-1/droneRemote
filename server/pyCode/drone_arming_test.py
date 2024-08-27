@@ -8,8 +8,8 @@ from mavsdk.offboard import (OffboardError, PositionNedYaw)
 async def run():
 
     drone = System()
-    await drone.connect(system_address="udp://:14540") #시뮬레이션 용 연결 코드
-    #await drone.connect(system_address="serial///dev/ttyUSB0:921600") 드론용 연결 코드
+    #await drone.connect(system_address="udp://:14540") #시뮬레이션 용 연결 코드
+    await drone.connect(system_address="serial///dev/ttyUSB0:921600") #드론용 연결 코드
 
     print("Waiting for drone to connect...")
     async for state in drone.core.connection_state():
