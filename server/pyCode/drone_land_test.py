@@ -31,12 +31,12 @@ async def run():
     print("-- Taking off")
     await drone.action.takeoff()
 
-    await asyncio.sleep(5)
+    await asyncio.sleep(30)
 
     print("-- Landing")
     await drone.action.land()
 
-    await asyncio.sleep(10)
+    await asyncio.sleep(30)
 
     print("-- Disarming the drone")  #추가
     await drone.action.disarm()
