@@ -1,9 +1,9 @@
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
-const path = require('path');
+// const path = require('path');
 const dotenv = require('dotenv');
-const nunjucks = require('nunjucks');
+// const nunjucks = require('nunjucks');
 const {sequelize} = require('./models');
 const bodyParser = require('body-parser');
 
@@ -18,8 +18,11 @@ const socketRouter = require('./routes/socket_test');
 
 
 const app = express();
+
 const server = http.createServer(app);   // Express 앱을 기반으로 HTTP 서버 생성
 const io = socketIo(server);
+
+
 app.set('view engine', 'ejs');
 app.set('views', './views');
 app.set('port', process.env.port || 3000);
@@ -29,6 +32,7 @@ app.set('port', process.env.port || 3000);
 //     watch: true,
 // });
 
+//DB 연결
 sequelize.sync({ force: false })
     .then(() => {
         console.log('데이터베이스 연결 성공');
@@ -41,13 +45,25 @@ sequelize.sync({ force: false })
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// Socket.io 설정
+io.on('connection', (socket) => {
+    console.log('a user connected');
+  
+    socket.on('disconnect', () => {
+      console.log('user disconnected');
+    });
+  });
+
 app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/pyTest', pyTestRouter);
 app.use('/location', locaRouter);
 app.use('/saveLocation', saveLocationRouter);
 app.use('/moveDrone', moveDroneRouter);
-app.use('/socketTest', socketRouter);
+app.use('/socketTest', (req, res, next) => {
+    req.io = io; // `req` 객체에 `io`를 추가
+    next();
+}, socketRouter);
 
 app.use((req, res, next) => {
     res.status(404).send('Not Found');
@@ -60,32 +76,34 @@ app.use((err, req, res, next) => {
 
 
 // Socket.IO connection
-io.on('connection', (socket) => {
-    console.log('A user connected');
+// io.on('connection', (socket) => {
+//     console.log('A user connected');
 
-    // Send a message to the client when a user connects
-    socket.emit('consoleMessage', 'Connected to server');
+//     // Send a message to the client when a user connects
+//     socket.emit('consoleMessage', 'Connected to server');
 
-    // Listen for console messages from the server
-    process.stdout.write = (function(write) {
-        return function(string, encoding, fd) {
-            socket.emit('consoleMessage', string);
-            write.apply(process.stdout, arguments);
-        };
-    })(process.stdout.write);
+//     // Listen for console messages from the server
+//     process.stdout.write = (function(write) {
+//         return function(string, encoding, fd) {
+//             socket.emit('consoleMessage', string);
+//             write.apply(process.stdout, arguments);
+//         };
+//     })(process.stdout.write);
 
-    // Handle disconnection
-    socket.on('disconnect', () => {
-        console.log('A user disconnected');
-    });
-});
+//     // Handle disconnection
+//     socket.on('disconnect', () => {
+//         console.log('A user disconnected');
+//     });
+// });
 
 // Export `io` for use in other modules
+// module.exports = { io };
+
+// Export `io` and `server` for use in other modules
 module.exports = { io, server };
 
-test = 123;
-module.exports = { test };
 
-app.listen(app.get('port'), ()=>{
+
+server.listen(app.get('port'), ()=>{
     console.log(app.get('port'),'번 포트에서 대기중');
 });
