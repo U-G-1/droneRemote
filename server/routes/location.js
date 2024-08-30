@@ -31,7 +31,7 @@ router.post('/execute', (req, res) => {
     }
 
     // 파이썬 스크립트를 spawn으로 실행 매개변수 : chimney
-    const pythonProcess = spawn('python', [scriptPath]);
+    const pythonProcess = spawn('python', ['-u',scriptPath]);
 
     // 스크립트 실행 중 표준 출력 처리
     pythonProcess.stdout.on('data', (data) => {
