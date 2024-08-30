@@ -23,6 +23,10 @@ const server = http.createServer(app);   // Express 앱을 기반으로 HTTP 서
 const io = socketIo(server);
 
 
+// io 객체를 전역으로 설정
+global.io = io;
+
+
 app.set('view engine', 'ejs');
 app.set('views', './views');
 app.set('port', process.env.port || 3000);

@@ -15,7 +15,7 @@ router.post('/execute', (req, res) => {
     console.log('드론 이동 실행');
     const chimney = req.body.chimney;
     console.log('굴뚝 번호: ', chimney);
-    const io = req.io;
+
 
     let scriptPath;
 
@@ -39,7 +39,7 @@ router.post('/execute', (req, res) => {
     // 스크립트 실행 중 표준 출력 처리
     pythonProcess.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
-        io.emit(data);
+        global.io.emit(data);
     });
 
     // 스크립트 실행 중 표준 오류 처리
