@@ -15,7 +15,7 @@ router.post('/execute', (req, res) => {
     console.log('드론 이동 실행');
     const chimney = req.body.chimney;
     console.log('굴뚝 번호: ', chimney);
-    const io = req.io
+    const io = req.io;
 
     let scriptPath;
 
