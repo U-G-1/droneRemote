@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
     // Python 스크립트를 실행합니다.
-    const pythonProcess = spawn('python3', ['pyCode/saveLocation.py']);
+    const pythonProcess = spawn('python3', ['-u','pyCode/saveLocation.py']);
 
     let output = '';
 

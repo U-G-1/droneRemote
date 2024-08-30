@@ -1,7 +1,9 @@
 const express = require('express');
 const { spawn } = require('child_process');
 const path = require('path');
+const { io } = require('../app');
 const router = express.Router();
+
 
 // GET 요청 시 location.ejs를 렌더링
 router.get('/', (req, res) => {
@@ -36,6 +38,7 @@ router.post('/execute', (req, res) => {
     // 스크립트 실행 중 표준 출력 처리
     pythonProcess.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
+        io.emit(data);
     });
 
     // 스크립트 실행 중 표준 오류 처리

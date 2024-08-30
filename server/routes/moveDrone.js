@@ -39,7 +39,7 @@ router.post('/move',async (req, res) => {
     const scriptPath = path.join(__dirname, '..', 'pyCode', 'moveDrone.py');
 
     // 파이썬 스크립트를 spawn으로 실행 매개변수 : chimney
-    const pythonProcess = spawn('python', [scriptPath, x,y,z,slope]);
+    const pythonProcess = spawn('python', ['-u',scriptPath, x,y,z,slope]);
 
     // 스크립트 실행 중 표준 출력 처리
     pythonProcess.stdout.on('data', (data) => {

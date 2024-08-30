@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 // const { io,server } = require('../app'); // `app.js`에서 `io`를 가져옵니다
 
-const SocketIO = require("socket.io");
+//const SocketIO = require("socket.io");
 
 
 router.get('/', (req, res) => {

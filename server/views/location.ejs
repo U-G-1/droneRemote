@@ -4,6 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chimney Selection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        #consoleOutput {
+            background-color: #000;
+            color: #0f0;
+            padding: 10px;
+            border-radius: 5px;
+            height: 400px;
+            overflow-y: scroll;
+        }
+    </style>
 </head>
 <body>
     <h1>Select a Chimney</h1>
@@ -16,5 +32,32 @@
         <label for="chimney3">arming test</label><br><br>
         <button type="submit">실행</button>
     </form>
+
+    <h3>Server Console Output</h3>
+    <div id="consoleOutput"></div>
+
+    <!-- Include the Socket.IO client library -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!-- Inline JavaScript to handle Socket.IO communication -->
+    <script>
+        // 페이지가 로드된 후 실행
+        document.addEventListener("DOMContentLoaded", () => {
+            // 클라이언트에서 서버로 Socket.IO 연결 생성
+            const socket = io(); 
+            const consoleOutput = document.getElementById('consoleOutput');
+
+            // 서버에서 보낸 'consoleMessage' 이벤트를 수신
+            socket.on('consoleMessage', (msg) => {
+                // 새로운 메시지를 div에 추가
+                const messageElement = document.createElement('div');
+                messageElement.textContent = msg;
+                consoleOutput.appendChild(messageElement);
+
+                // 자동으로 스크롤을 가장 아래로 이동
+                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            });
+        });
+    </script>
 </body>
 </html>
