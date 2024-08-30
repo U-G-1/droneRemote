@@ -79,31 +79,6 @@ app.use((err, req, res, next) => {
 });
 
 
-// Socket.IO connection
-// io.on('connection', (socket) => {
-//     console.log('A user connected');
-
-//     // Send a message to the client when a user connects
-//     socket.emit('consoleMessage', 'Connected to server');
-
-//     // Listen for console messages from the server
-//     process.stdout.write = (function(write) {
-//         return function(string, encoding, fd) {
-//             socket.emit('consoleMessage', string);
-//             write.apply(process.stdout, arguments);
-//         };
-//     })(process.stdout.write);
-
-//     // Handle disconnection
-//     socket.on('disconnect', () => {
-//         console.log('A user disconnected');
-//     });
-// });
-
-// Export `io` for use in other modules
-// module.exports = { io };
-
-// Export `io` and `server` for use in other modules
 module.exports = { io, server };
 
 
