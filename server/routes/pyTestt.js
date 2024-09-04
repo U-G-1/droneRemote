@@ -11,10 +11,14 @@ router.get('/', (req, res) => {
 
     let output = '';
 
-    // Python 스크립트의 표준 출력을 받습니다.
+    // 스크립트 실행 중 표준 출력 처리
     pythonProcess.stdout.on('data', (data) => {
-        output += data.toString();
+        console.log(`stdout: ${data}`);
     });
+    // Python 스크립트의 표준 출력을 받습니다.
+    // pythonProcess.stdout.on('data', (data) => {
+    //     output += data.toString();
+    // });
     let x, y, z;  // 라우터 외부에서 선언
     // Python 스크립트가 완료된 후 실행됩니다.
     pythonProcess.on('close', (code) => {
