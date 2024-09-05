@@ -39,6 +39,12 @@ router.get('/', (req, res) => {
     router.post('/save', async (req, res) => {
         try {
             const { chim_name } = req.body;
+
+            //같은 굴뚝이름의 최대 번호를 가져옴
+            const maxChimNum = await Location.max('chim_num', {
+                where: { chim_name: chim_name }
+            });
+            const chim_num = maxChimNum !== null ? maxChimNum + 1 : 1;
     
             // 데이터베이스에 저장
             await Location.create({
@@ -47,6 +53,7 @@ router.get('/', (req, res) => {
                 loca_z: z,
                 slope: 0, // slope 값을 0으로 설정
                 chim_name: chim_name,
+                chim_num: chim_num
             });
             // 저장 완료 후 /saveLocation 페이지로 메시지와 함께 리디렉션
             res.redirect('/');
