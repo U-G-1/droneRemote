@@ -1,8 +1,7 @@
-#------------------------------------------------------------------------------
-#   드론 이동 테스트
-#   위로 10m, 앞으로 10m
-#   작동 종료의 두번째 경우 -> 성공
-#------------------------------------------------------------------------------
+"""
+드론 이륙 테스트
+무장 -> 절대좌표 추정 -> 시동 -> 좌표값받아오기 -> 착륙 -> 무장해제
+"""
 
 import asyncio
 import sys
@@ -39,8 +38,7 @@ def printArgs(n1,n2,n3):
 
 async def run():
     drone = System()
-    #await drone.connect(system_address="udp://:14540")
-    await drone.connect(system_address="serial///dev/ttyUSB0:921600") #드론용 연결 코드
+    await drone.connect(system_address="udp://:14540")
 
     print("Waiting for drone to connect...")
     async for state in drone.core.connection_state():
@@ -54,72 +52,51 @@ async def run():
             print("-- Global position state is good enough for flying.")
             break
 
-    print("-- Arming")
+    print("-- 3s 소요 Arming")
     await drone.action.arm()
     await asyncio.sleep(3)
 
-    print("-- Taking off")
+    print("-- 15s 소요: Taking off")
     await drone.action.takeoff()
-    await asyncio.sleep(5)
+    await asyncio.sleep(15)
 
+    variables = {}
+    
     try:
-        float_x = float(sys.argv[1])
-        float_y = float(sys.argv[2])
-        float_z = float(sys.argv[3])
+        """if len(sys.argv) < 4 * 3 + 1:
+            print("인자가 부족합니다. 12개의 좌표 인자가 필요합니다.")
+            return"""
+
+        for i in range(4):
+            float_x = float(sys.argv[i*3+1])
+            float_y = float(sys.argv[i*3+2])
+            float_z = float(sys.argv[i*3+3])
+            variables[f"float_x_{i+1}"] = float_x
+            variables[f"float_y_{i+1}"] = float_y
+            variables[f"float_z_{i+1}"] = float_z
+
+            print(f" 받아온 값 float(sys.argv[{i*3+1}]): {float_x}, float_x_{i+1}: {variables[f'float_x_{i+1}']}")
+            print(f" 받아온 값 float(sys.argv[{i*3+2}]): {float_y}, float_y_{i+1}: {variables[f'float_y_{i+1}']}")
+            print(f" 받아온 값 float(sys.argv[{i*3+3}]): {float_z}, float_z_{i+1}: {variables[f'float_z_{i+1}']}")
     except ValueError:
         print("올바른 숫자 형식이 아닙니다.")
+        return
 
-    print(f"  서버로부터 받은 좌표 / {float_x}, {float_y}, {float_z} )")
-    
-    await drone.action.goto_location(float_x, float_y, float_z, 0)
-    await asyncio.sleep(10)
+    for i in range(1, 5):
+        print(f"-- 30s 소요 Moving to waypoint {i}")
+        print(f"서버로부터 받은 좌표 / {variables[f'float_x_{i}']}, {variables[f'float_y_{i}']}, {variables[f'float_z_{i}']}")
+        await drone.action.goto_location(variables[f"float_x_{i}"], variables[f"float_y_{i}"], variables[f"float_z_{i}"], 0)
+        await asyncio.sleep(30)
 
-    print("-- Landing")
+    print("-- 30s 소요 Landing")
     await drone.action.land()
-    await asyncio.sleep(10)
+    await asyncio.sleep(30)
 
     print("-- Disarming the drone")  #추가
     await drone.action.disarm()
 
     print("Drone is disarmed and the script is done.")
-
-async def wait_until_altitude_reached(drone, target_altitude, tolerance=0.5):
-    """
-    드론이 목표 고도에 도달할 때까지 대기하는 함수
-    """
-    print("Waiting for the drone to reach the target altitude...")
-    async for position in drone.telemetry.position():
-        current_alt = position.relative_altitude_m
-        alt_diff = abs(current_alt - target_altitude)
-
-        if alt_diff <= tolerance:
-            print("Target altitude reached!")
-            break
-
-        await asyncio.sleep(1)  # 1초마다 고도 확인
-
-async def wait_until_reached_global_position(drone, target_lat, target_lon, target_alt, tolerance=0.5):
-    """
-    드론이 목표 위치에 도달할 때까지 대기하는 함수
-    """
-    print("Waiting for the drone to reach the target position...")
-    async for position in drone.telemetry.position():
-        current_lat = position.latitude_deg
-        current_lon = position.longitude_deg
-
-    async for home in drone.telemetry.home():
-        current_alt = home.absolute_altitude_m
-
-        lat_diff = abs(current_lat - target_lat)
-        lon_diff = abs(current_lon - target_lon)
-        alt_diff = abs(current_alt - target_alt)
-
-        if lat_diff <= tolerance and lon_diff <= tolerance and alt_diff <= tolerance:
-            print("Target position reached!")
-            break
-
-        await asyncio.sleep(0.5)  # 1초마다 위치 확인
-        
+     
 if __name__ == "__main__":
     # Run the asyncio loop
     loop = asyncio.get_event_loop()
