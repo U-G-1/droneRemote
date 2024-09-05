@@ -16,6 +16,11 @@ router.post('/move',async (req, res) => {
     const chimneyNumber = req.body.chimney; // 선택된 굴뚝 번호를 가져옵니다.
     const chimName = `굴뚝${chimneyNumber}`; // 선택된 굴뚝 번호에 해당하는 이름을 생성합니다.
 
+    console.log('chimName : ', chimName);
+    if (!chimName) {
+        throw new Error("chimName이 필요합니다.");
+    }
+
     // 데이터베이스에서 해당 chim_name을 가진 Location들을 검색하고 chim_num 오름차순으로 정렬합니다.
     const locations = await Location.findAll({
         where: { chim_name: chimName },
