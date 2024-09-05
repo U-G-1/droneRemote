@@ -27,7 +27,7 @@ router.post('/move',async (req, res) => {
         order: [['chim_num', 'ASC']],
     });
 
-    if (!locations.length === 0) {
+    if (locations.length === 0) {
         return res.status(404).send('Chimney not found');
     }
 
