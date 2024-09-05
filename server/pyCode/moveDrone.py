@@ -91,7 +91,7 @@ async def run():
 
     print("-- 30s 소요 Landing")
     await drone.action.land()
-    await asyncio.sleep(30)
+    await asyncio.sleep(40)
 
     print("-- Disarming the drone")  #추가
     await drone.action.disarm()

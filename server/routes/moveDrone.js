@@ -63,11 +63,13 @@ router.post('/move',async (req, res) => {
     // 스크립트 실행 중 표준 출력 처리
     pythonProcess.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
+        global.io.emit('consoleMessage', data.toString());
     });
 
     // 스크립트 실행 중 표준 오류 처리
     pythonProcess.stderr.on('data', (data) => {
         console.error(`stderr: ${data}`);
+        global.io.emit('consoleMessage', data.toString());
     });
 
     // 스크립트 실행 종료 시 처리
