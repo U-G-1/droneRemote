@@ -30,7 +30,14 @@ async def calculate_absolute_altitude(drone):
     # Calculate the absolute altitude
     cal_z = absolute_z + relative_z
     return cal_z
-    
+
+async def wait_until_landed(drone):
+    async for in_air in drone.telemetry.in_air():
+        if not in_air:
+            print("-- Landing complete")
+            break
+        await asyncio.sleep(0.5) 
+        
 def printArgs(n1,n2,n3):
     print(n1)
     print(n2)
@@ -39,7 +46,6 @@ def printArgs(n1,n2,n3):
 async def run():
     drone = System()
     await drone.connect(system_address="udp://:14540")
-    #await drone.connect(system_address="serial///dev/ttyUSB0:921600") #드론용 연결 코드
 
     print("Waiting for drone to connect...")
     async for state in drone.core.connection_state():
@@ -91,8 +97,10 @@ async def run():
 
     print("-- 30s 소요 Landing")
     await drone.action.land()
-    await asyncio.sleep(40)
-
+    await asyncio.sleep(30)
+    
+    await wait_until_landed(drone)
+    
     print("-- Disarming the drone")  #추가
     await drone.action.disarm()
 
