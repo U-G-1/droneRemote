@@ -37,7 +37,7 @@ async def wait_until_landed(drone):
             print("-- Landing complete")
             break
         await asyncio.sleep(0.5) 
-        
+    
 def printArgs(n1,n2,n3):
     print(n1)
     print(n2)
@@ -45,8 +45,7 @@ def printArgs(n1,n2,n3):
 
 async def run():
     drone = System()
-    #await drone.connect(system_address="udp://:14540")
-    await drone.connect(system_address="serial///dev/ttyUSB0:921600") #드론용 연결 코드
+    await drone.connect(system_address="udp://:14540")
 
     print("Waiting for drone to connect...")
     async for state in drone.core.connection_state():
@@ -68,12 +67,21 @@ async def run():
     await drone.action.takeoff()
     await asyncio.sleep(15)
 
-    variables = {}
-    
-    try:
-        """if len(sys.argv) < 4 * 3 + 1:
+    variables = {
+        'float_x_1':37.628245199999995, 'float_y_1':127.0904369, 'float_z_1':60.945002626627684, 
+        'float_x_2':37.6282169, 'float_y_2':127.09053779999999, 'float_z_2':60.489002622663975, 
+        'float_x_3':37.6281524, 'float_y_3':127.0904784, 'float_z_3':58.758003920316696, 
+        'float_x_4':37.628245199999995, 'float_y_4':127.0904369, 'float_z_4':60.945002626627684
+    }
+
+    print(" variables 값 나열 ")
+    for key, value in variables.items():
+        print(f"{key}: {value}")
+
+    """try:
+        if len(sys.argv) < 4 * 3 + 1:
             print("인자가 부족합니다. 12개의 좌표 인자가 필요합니다.")
-            return"""
+            return
 
         for i in range(4):
             float_x = float(sys.argv[i*3+1])
@@ -88,7 +96,7 @@ async def run():
             print(f" 받아온 값 float(sys.argv[{i*3+3}]): {float_z}, float_z_{i+1}: {variables[f'float_z_{i+1}']}")
     except ValueError:
         print("올바른 숫자 형식이 아닙니다.")
-        return
+        return"""
 
     for i in range(1, 5):
         print(f"-- 30s 소요 Moving to waypoint {i}")
@@ -96,10 +104,10 @@ async def run():
         await drone.action.goto_location(variables[f"float_x_{i}"], variables[f"float_y_{i}"], variables[f"float_z_{i}"], 0)
         await asyncio.sleep(30)
 
-    print("-- 30s 소요 Landing")
+    print("-- 20s 소요 Landing")
     await drone.action.land()
-    await asyncio.sleep(30)
-    
+    await asyncio.sleep(20)
+
     await wait_until_landed(drone)
     
     print("-- Disarming the drone")  #추가
