@@ -70,35 +70,11 @@ async def run():
     await asyncio.sleep(15)
 
     variables = {
-        'float_x_1':37.628245199999995, 'float_y_1':127.0904369, 'float_z_1':60.945002626627684, 
-        'float_x_2':37.6282169, 'float_y_2':127.09053779999999, 'float_z_2':60.489002622663975, 
-        'float_x_3':37.6281524, 'float_y_3':127.0904784, 'float_z_3':58.758003920316696, 
-        'float_x_4':37.628245199999995, 'float_y_4':127.0904369, 'float_z_4':60.945002626627684
+        'float_x_1':37.6281975, 'float_y_1':127.0905456, 'float_z_1':70.61200238019228,
+        'float_x_2':37.628219699999995, 'float_y_2':127.0904748, 'float_z_2':71.809500311470032, 
+        'float_x_3':37.6282473, 'float_y_3':127.0904437, 'float_z_3':70.5870052576065,
+        'float_x_4':37.6281975, 'float_y_4':127.0905456, 'float_z_4':70.61200238019228,
     }
-
-    print(" variables 값 나열 ")
-    for key, value in variables.items():
-        print(f"{key}: {value}")
-
-    """try:
-        if len(sys.argv) < 4 * 3 + 1:
-            print("인자가 부족합니다. 12개의 좌표 인자가 필요합니다.")
-            return
-
-        for i in range(4):
-            float_x = float(sys.argv[i*3+1])
-            float_y = float(sys.argv[i*3+2])
-            float_z = float(sys.argv[i*3+3])
-            variables[f"float_x_{i+1}"] = float_x
-            variables[f"float_y_{i+1}"] = float_y
-            variables[f"float_z_{i+1}"] = float_z
-
-            print(f" 받아온 값 float(sys.argv[{i*3+1}]): {float_x}, float_x_{i+1}: {variables[f'float_x_{i+1}']}")
-            print(f" 받아온 값 float(sys.argv[{i*3+2}]): {float_y}, float_y_{i+1}: {variables[f'float_y_{i+1}']}")
-            print(f" 받아온 값 float(sys.argv[{i*3+3}]): {float_z}, float_z_{i+1}: {variables[f'float_z_{i+1}']}")
-    except ValueError:
-        print("올바른 숫자 형식이 아닙니다.")
-        return"""
 
     for i in range(1, 5):
         print(f"-- 30s 소요 Moving to waypoint {i}")
