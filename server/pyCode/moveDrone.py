@@ -72,7 +72,7 @@ async def run():
     variables = {
         'float_x_1':37.547959, 'float_y_1':127.1197124, 'float_z_1':20,
         'float_x_2':37.5476953, 'float_y_2':127.1196159, 'float_z_2':20, 
-        'float_x_3':37.5476294, 'float_y_3':127.0904437, 'float_z_3':20,
+        'float_x_3':37.5476294, 'float_y_3':127.1199941, 'float_z_3':20,
         'float_x_4':37.5479122, 'float_y_4':127.120104, 'float_z_4':20,
     }
 
@@ -80,7 +80,7 @@ async def run():
         print(f"-- 30s 소요 Moving to waypoint {i}")
         print(f"서버로부터 받은 좌표 / {variables[f'float_x_{i}']}, {variables[f'float_y_{i}']}, {variables[f'float_z_{i}']}")
         await drone.action.goto_location(variables[f"float_x_{i}"], variables[f"float_y_{i}"], variables[f"float_z_{i}"], 0)
-        await asyncio.sleep(30)
+        await asyncio.sleep(60)
 
     print("-- 20s 소요 Landing")
     await drone.action.land()
