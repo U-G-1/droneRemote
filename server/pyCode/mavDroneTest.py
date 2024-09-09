@@ -41,7 +41,7 @@ def main():
         print("-- 10s 소요: Taking off")
         connection.mav.command_long_send(
             connection.target_system, connection.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 10, 0, 0, 0, 0, 0, altitude
+            mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0 , 10, 0, 0, 0, 0, 0, 10
         )
 
     takeoff(10)
