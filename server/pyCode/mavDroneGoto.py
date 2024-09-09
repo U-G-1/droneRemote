@@ -84,6 +84,12 @@ def main():
     # 점으로 이동
     def goto(lat, lon, alt):
         print("goto 시작")
+        connection.mav.set_mode_send(
+        connection.target_system, 
+        mavutil.mavlink.MAV_MODE_AUTO_ARMED  # AUTO 모드로 설정
+        )
+        time.sleep(5)  # 모드 변경 후 대기
+
         connection.mav.command_long_send(
             connection.target_system, connection.target_component,
             mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 5, 0, 0, 0, lat, lon, alt
