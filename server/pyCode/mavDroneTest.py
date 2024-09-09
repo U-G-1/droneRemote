@@ -44,12 +44,6 @@ def main():
             mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0, 10, 0, 0, 0, 0, 0, altitude
         )
 
-        while True:
-            msg = connection.recv_match(type='GLOBAL_POSITION_INT', blocking=True)
-            current_altitude = msg.relative_alt / 1000.0
-            if current_altitude >= altitude * 0.95:
-                break
-
     takeoff(10)
     time.sleep(3)
 
@@ -58,14 +52,8 @@ def main():
         print("-- 10s 소요: Landing")
         connection.mav.command_long_send(
             connection.target_system, connection.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_LAND, 0, 0, 0, 0, 0, 0, default_alt
+            mavutil.mavlink.MAV_CMD_NAV_LAND, 0, 0, 0, 0, 0, 0, 0, default_alt
         )
-
-        while True:
-            msg = connection.recv_match(type='GLOBAL_POSITION_INT', blocking=True)
-            current_altitude = msg.relative_alt / 1000.0
-            if current_altitude >= default_alt * 0.95:
-                break
 
     land()
     time.sleep(3)

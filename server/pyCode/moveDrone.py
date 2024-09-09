@@ -1,69 +1,99 @@
+"""
+드론 이륙 테스트
+무장 -> 절대좌표 추정 -> 시동 -> 좌표값받아오기 -> 착륙 -> 무장해제
+"""
 
-import time
-from pymavlink import mavutil
+import asyncio
+import sys
+from mavsdk import System
+from mavsdk.offboard import (OffboardError, PositionNedYaw)
+    
+async def get_xy(drone):
+    async for position in drone.telemetry.position():
+        return position.latitude_deg, position.longitude_deg
+    
+async def get_z(drone):
+    async for home in drone.telemetry.home():
+        return home.absolute_altitude_m
+    
+async def get_d_z(drone):
+    async for position in drone.telemetry.position():
+        return position.relative_altitude_m
 
-def main():
-    # 연결 설정 (UDP 연결 예시)
-    connection = mavutil.mavlink_connection('udp:127.0.0.1:14550')
-    #connection = mavutil.mavlink_connection('serial///dev/ttyUSB0:921600')
+async def calculate_absolute_altitude(drone):
+    # Get the absolute altitude from home
+    absolute_z = await get_z(drone)
 
-   # Heartbeat 수신 대기 (드론과의 연결 확인)
-    print("Connecting to the drone...")
-    connection.wait_heartbeat(10)
-    if connection.target_system and connection.target_component:
-        print("-- Connected to drone!")
-    else:
-        print("Failed to connect to the drone.")
+     # Get the relative altitude
+    relative_z = await get_d_z(drone)
+    
+    # Calculate the absolute altitude
+    cal_z = absolute_z + relative_z
+    return cal_z
+
+async def wait_until_landed(drone):
+    async for in_air in drone.telemetry.in_air():
+        if not in_air:
+            print("-- Landing complete")
+            break
+        await asyncio.sleep(0.5) 
+    
+def printArgs(n1,n2,n3):
+    print(n1)
+    print(n2)
+    print(n3)
+
+async def run():
+    drone = System()
+    #await drone.connect(system_address="udp://:14540")
+    await drone.connect(system_address="serial///dev/ttyUSB0:921600") #드론용 연결 코드
+
+
+    print("Waiting for drone to connect...")
+    async for state in drone.core.connection_state():
+        if state.is_connected:
+            print("-- Connected to drone!")
+            break
 
     print("Waiting for drone to have a global position estimate...")
-    msg = connection.recv_match(type='GPS_RAW_INT', blocking=True)
-    if msg:
-        gps_status = msg  
-        # 위도, 경도, 고도가 유효한지 확인
-        if gps_status.fix_type >= 2:  # 2 = 2D fix, 3 = 3D fix
+    async for health in drone.telemetry.health():
+        if health.is_global_position_ok and health.is_home_position_ok:
             print("-- Global position state is good enough for flying.")
-            msg = connection.recv_match(type='GLOBAL_POSITION_INT', blocking=True)
-            default_alt = msg.alt / 1000.0
-        else:
-            print("Waiting for GPS data...")
+            break
 
-
-     # ARMING
     print("-- 3s 소요 Arming")
-    connection.arducopter_arm()
-    """connection.mav.command_long_send(
-            connection.target_system, connection.target_component,
-            mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM, 1)"""
-    time.sleep(3)
+    await drone.action.arm()
+    await asyncio.sleep(3)
 
-    # 이륙
-    def takeoff(altitude):
-        print("-- 10s 소요: Taking off")
-        connection.mav.command_long_send(
-            connection.target_system, connection.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0, 10, 0, 0, 0, 0, 0, altitude
-        )
+    print("-- 15s 소요: Taking off")
+    await drone.action.takeoff()
+    await asyncio.sleep(15)
 
-    takeoff(10)
-    time.sleep(3)
+    variables = {
+        'float_x_1':37.547959, 'float_y_1':127.1197124, 'float_z_1':11,
+        'float_x_2':37.5476953, 'float_y_2':127.1196159, 'float_z_2':11, 
+        'float_x_3':37.5476294, 'float_y_3':127.1199941, 'float_z_3':11,
+        'float_x_4':37.5479122, 'float_y_4':127.120104, 'float_z_4':11,
+    }
 
-    # 착륙
-    def land():
-        print("-- 10s 소요: Landing")
-        connection.mav.command_long_send(
-            connection.target_system, connection.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_LAND, 0, 0, 0, 0, 0, 0, 0, default_alt
-        )
+    for i in range(1, 5):
+        print(f"-- 30s 소요 Moving to waypoint {i}")
+        print(f"서버로부터 받은 좌표 / {variables[f'float_x_{i}']}, {variables[f'float_y_{i}']}, {variables[f'float_z_{i}']}")
+        await drone.action.goto_location(variables[f"float_x_{i}"], variables[f"float_y_{i}"], variables[f"float_z_{i}"], 0)
+        await asyncio.sleep(60)
 
-    land()
-    time.sleep(3)
+    print("-- 20s 소요 Landing")
+    await drone.action.land()
+    await asyncio.sleep(20)
+
+    await wait_until_landed(drone)
     
-    print("-- Disarm")
-    connection.mav.command_long_send(
-        connection.target_system,
-        connection.target_component,
-        mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM,0
-    )
+    print("-- Disarming the drone")  #추가
+    await drone.action.disarm()
 
+    print("Drone is disarmed and the script is done.")
+     
 if __name__ == "__main__":
-    main()
+    # Run the asyncio loop
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(run())
