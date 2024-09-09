@@ -43,11 +43,17 @@ def main():
 
     time.sleep(5)
 
-    # set_mode("Stabilize")
-    connection.mav.set_mode_send(
-    connection.target_system,
-    mavutil.mavlink.MAV_MODE_GUIDED_ARMED, 0  # GUIDED 모드로 설정
-)
+    def set_mode(connection, mode):
+        print(f"Setting mode to {mode}...")
+        connection.mav.set_mode_send(
+            connection.target_system,
+            mode,  # 비행 모드 설정
+            0  # 커스텀 모드 (0으로 설정)
+        )
+        # 모드 변경 후 약간의 대기 시간 설정
+        time.sleep(5)
+
+    set_mode(connection, mavutil.mavlink.MAV_MODE_GUIDED_ARMED)
 
      # ARMING
     print("-- 3s 소요 Arming")
@@ -73,9 +79,10 @@ def main():
     # 점으로 이동
     def goto(lat, lon, alt):
         print("goto 시작")
+       
         connection.mav.command_long_send(
             connection.target_system, connection.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 5, 0, 0, 0, int(lat * 1e7), int(lon * 1e7),  # 경도, alt
+            mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 5, 0, 0, 0, int(lat * 1e7), int(lon * 1e7),  alt
         )
         time.sleep(15)
  
