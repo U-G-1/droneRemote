@@ -93,7 +93,7 @@ def main():
         int(lat * 1e7),  # lat_int: int32_t, 목표 위도 (단위: 1e-7 degrees)
         int(lon * 1e7),  # lon_int: int32_t, 목표 경도 (단위: 1e-7 degrees)
         int(alt * 1000), 
-        0, 0, 0,  # 속도 (vx, vy, vz) - 이동 속도 설정 안 함
+        1, 1, 1,  # 속도 (vx, vy, vz) - 이동 속도 설정 안 함
         0, 0, 0,  # 가속도 (ax, ay, az) - 가속도 설정 안 함
         0, 0  # yaw, yaw rate - 회전 관련 설정 안 함 
         )
