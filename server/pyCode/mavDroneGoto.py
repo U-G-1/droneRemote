@@ -58,7 +58,7 @@ def main():
             print(f"Mode {mode} is not available.")
 
     # 'Stabilize' 모드로 변경
-    set_mode('GUIDED')
+    set_mode('Stabilize')
 
      # ARMING
     print("-- 3s 소요 Arming")
@@ -84,18 +84,9 @@ def main():
     # 점으로 이동
     def goto(lat, lon, alt):
         print("goto 시작")
-        connection.mav.set_position_target_global_int_send(
-        0,  # 시간 (timestamp) - 일반적으로 0으로 설정
-        connection.target_system,  # 시스템 ID
-        connection.target_component,  # 컴포넌트 ID
-        mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT_INT,  # 프레임 타입
-        0b0000111111110000,  # 속성 플래그 (위치만 설정)
-        int(lat * 1e7),  # lat_int: int32_t, 목표 위도 (단위: 1e-7 degrees)
-        int(lon * 1e7),  # lon_int: int32_t, 목표 경도 (단위: 1e-7 degrees)
-        int(alt * 1000), 
-        1, 1, 1,  # 속도 (vx, vy, vz) - 이동 속도 설정 안 함
-        0, 0, 0,  # 가속도 (ax, ay, az) - 가속도 설정 안 함
-        0, 0  # yaw, yaw rate - 회전 관련 설정 안 함 
+        connection.mav.command_long_send(
+            connection.target_system, connection.target_component,
+            mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 5, 0, 0, 0, lat, lon, alt
         )
         time.sleep(15)
  
