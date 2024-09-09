@@ -2,6 +2,7 @@
 import time
 from pymavlink import mavutil
 
+print("1. start")
 def main():
     # 연결 설정 (UDP 연결 예시)
     print("start")
@@ -55,6 +56,15 @@ def main():
     time.sleep(3)
 
     # 점으로 이동
+    # 목표 좌표로 이동
+def goto_position_target_global_int(lat, lon, alt):
+    connection.mav.set_position_target_global_int_send(
+        0, connection.target_system, connection.target_component,
+        mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT_INT, 0b0000111111111000,
+        int(lat), int(lon), alt, 0, 0, 0, 0, 0, 0, 0, 0
+    )
+
+goto_position_target_global_int(37.7749 * 1e7, -122.4194 * 1e7, 20)
 
 
 
