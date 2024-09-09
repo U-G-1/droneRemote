@@ -86,7 +86,7 @@ def main():
         print("goto 시작")
         connection.mav.set_mode_send(
         connection.target_system, 
-        mavutil.mavlink.MAV_MODE_AUTO_ARMED  # AUTO 모드로 설정
+        mavutil.mavlink.MAV_MODE_AUTO_ARMED,0  # AUTO 모드로 설정
         )
         time.sleep(5)  # 모드 변경 후 대기
 
