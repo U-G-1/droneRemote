@@ -75,7 +75,7 @@ def main():
             connection.target_system, connection.target_component,
             mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0, 5, 0, 0, 0, 37.5479590, 127.1197123, altitude
         )
-        time.sleep(5)
+        time.sleep(10)
 
     takeoff(10)
     time.sleep(5)
