@@ -6,21 +6,21 @@ connection = mavutil.mavlink_connection('udp:127.0.0.1:14540')
 connection.wait_heartbeat()
 
 # 모드 설정
-def set_mode(mode):
-    mode_id = connection.mode_mapping()[mode]
-    connection.mav.set_mode_send(connection.target_system, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, mode_id)
-
-set_mode("GUIDED")
 # def set_mode(mode):
-#     if mode in connection.mode_mapping():
-#         mode_id = connection.mode_mapping()[mode]
-#         connection.mav.set_mode_send(
-#             connection.target_system,
-#             mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
-#             mode_id
-#         )
-#     else:
-#         print(f"Mode {mode} is not available.")
+#     mode_id = connection.mode_mapping()[mode]
+#     connection.mav.set_mode_send(connection.target_system, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, mode_id)
+
+# set_mode("GUIDED")
+def set_mode(mode):
+    if mode in connection.mode_mapping():
+        mode_id = connection.mode_mapping()[mode]
+        connection.mav.set_mode_send(
+            connection.target_system,
+            mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
+            mode_id
+        )
+    else:
+        print(f"Mode {mode} is not available.")
 
 # 'OFFBOARD' 모드로 변경
 set_mode('OFFBOARD')
