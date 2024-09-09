@@ -67,7 +67,7 @@ def main():
         print("-- 10s 소요: Landing")
         connection.mav.command_long_send(
             connection.target_system, connection.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_LAND, 0, 0, 0, 0,
+            mavutil.mavlink.MAV_CMD_NAV_LAND, 0, 0, 0, 0, 0, 0, 0, default_alt
         )
 
     land()
