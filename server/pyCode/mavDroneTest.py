@@ -77,7 +77,7 @@ def main():
     connection.mav.command_long_send(
         connection.target_system,
         connection.target_component,
-        mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM,0
+        mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM,0,0,0,0,0,0,0,0
     )
 
 if __name__ == "__main__":
