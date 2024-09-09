@@ -2,7 +2,7 @@
 from pymavlink import mavutil
 
 # 연결 설정 (UDP 연결 예시)
-connection = mavutil.mavlink_connection('udp://:14540')
+connection = mavutil.mavlink_connection('udp:127.0.0.1:14540')
 connection.wait_heartbeat()
 
 # 모드 설정
