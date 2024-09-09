@@ -53,8 +53,8 @@ def main():
         # 모드 변경 후 약간의 대기 시간 설정
         time.sleep(5)
 
-    set_mode(connection, mavutil.mavlink.MAV_MODE_AUTO_ARMED)
-    
+    set_mode('AUTO')
+
      # ARMING
     print("-- 3s 소요 Arming")
     connection.arducopter_arm()
