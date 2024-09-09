@@ -43,6 +43,23 @@ def main():
 
     time.sleep(5)
 
+    # set_mode("Stabilize")
+    def set_mode(mode):
+        mode_mapping = connection.mode_mapping()  # 모드 매핑을 가져옵니다
+        if mode in mode_mapping:
+            mode_id = mode_mapping[mode]  # 모드 ID를 가져옵니다
+            connection.mav.set_mode_send(
+                connection.target_system,  # 드론의 시스템 ID
+                mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,  # 사용자 정의 모드 플래그
+                mode_id  # 사용자 정의 모드 ID
+            )
+            print(f"Mode set to {mode}.")
+        else:
+            print(f"Mode {mode} is not available.")
+
+    # 'Stabilize' 모드로 변경
+    set_mode('Stabilize')
+
      # ARMING
     print("-- 3s 소요 Arming")
     connection.arducopter_arm()
@@ -77,7 +94,7 @@ def main():
     connection.mav.command_long_send(
         connection.target_system,
         connection.target_component,
-        mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM,0,0,0,0,0,0,0,0
+        mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM,0
     )
 
 if __name__ == "__main__":
