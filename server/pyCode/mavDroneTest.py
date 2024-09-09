@@ -4,6 +4,7 @@ from pymavlink import mavutil
 
 def main():
     # 연결 설정 (UDP 연결 예시)
+    print("start")
     connection = mavutil.mavlink_connection('udp:127.0.0.1:14540')
     #connection = mavutil.mavlink_connection('serial///dev/ttyUSB0:921600')
 
@@ -53,6 +54,10 @@ def main():
     takeoff(10)
     time.sleep(3)
 
+    # 점으로 이동
+
+
+
     # 착륙
     def land():
         print("-- 10s 소요: Landing")
@@ -78,4 +83,5 @@ def main():
     )
 
     if __name__ == "__main__":
+        print("start in main")
         main()
