@@ -83,6 +83,7 @@ def main():
     
     # 점으로 이동
     def goto(lat, lon, alt):
+        print("goto 시작")
         connection.mav.set_position_target_global_int_send(
         0,  # 시간 (timestamp) - 일반적으로 0으로 설정
         connection.target_system,  # 시스템 ID
@@ -94,8 +95,10 @@ def main():
         int(alt * 1000), 
         0, 0, 0,  # 속도 (vx, vy, vz) - 이동 속도 설정 안 함
         0, 0, 0,  # 가속도 (ax, ay, az) - 가속도 설정 안 함
-        0, 0  # yaw, yaw rate - 회전 관련 설정 안 함
-    )
+        0, 0  # yaw, yaw rate - 회전 관련 설정 안 함 
+        )
+        time.sleep(15)
+    
 
     goto(37.54759682966823, 127.11961450028555, 20)
     
