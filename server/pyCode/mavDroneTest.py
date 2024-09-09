@@ -73,7 +73,7 @@ def main():
         print("-- 10s 소요: Taking off")
         connection.mav.command_long_send(
             connection.target_system, connection.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0, 10, 0, 0, 0, 0, 0, altitude
+            mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0, 10, 0, 0, 0, 37.5479590, 127.1197123, altitude
         )
 
     takeoff(10)
@@ -84,7 +84,7 @@ def main():
         print("-- 10s 소요: Landing")
         connection.mav.command_long_send(
             connection.target_system, connection.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_LAND, 0, 0, 0, 0, 0, 375479590, 1271197123, 7
+            mavutil.mavlink.MAV_CMD_NAV_LAND, 0, 0, 0, 0, 0, 37.5479590, 127.1197123, 7
         )
 
     land()
