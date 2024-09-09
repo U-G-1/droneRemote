@@ -43,16 +43,16 @@ def main():
 
     time.sleep(5)
 
-def set_mode(connection, base, custom):
-    print(f"Setting mode to {mode}...")
-    connection.mav.set_mode_send(
-        connection.target_system,   # 시스템 ID
-        base,  # 기본 모드 플래그
-        mode  # 커스텀 모드
-    )
-    time.sleep(5) 
+    def set_mode(connection, base, custom):
+        print(f"Setting mode to {custom}...")
+        connection.mav.set_mode_send(
+            connection.target_system,   # 시스템 ID
+            base,  # 기본 모드 플래그
+            custom  # 커스텀 모드
+        )
+        time.sleep(5) 
 
-set_mode(connection, MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, mavutil.mavlink.MAV_MODE_GUIDED_ARMED)  # GUIDED 모드 설정
+    set_mode(connection, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, mavutil.mavlink.MAV_MODE_GUIDED_ARMED)  # GUIDED 모드 설정
 
      # ARMING
     print("-- 3s 소요 Arming")
