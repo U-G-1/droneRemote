@@ -9,7 +9,7 @@ def main():
 
    # Heartbeat 수신 대기 (드론과의 연결 확인)
     print("Connecting to the drone...")
-    connection.wait_heartbeat(10)
+    connection.wait_heartbeat(20)
     if connection.target_system and connection.target_component:
         print("-- Connected to drone!")
     else:
@@ -27,6 +27,7 @@ def main():
         else:
             print("Waiting for GPS data...")
 
+    time.sleep(10)
 
      # ARMING
     print("-- 3s 소요 Arming")
@@ -34,18 +35,18 @@ def main():
     """connection.mav.command_long_send(
             connection.target_system, connection.target_component,
             mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM, 1)"""
-    time.sleep(3)
+    time.sleep(10)
 
     # 이륙
-    def takeoff():
+    def takeoff(altitude):
         print("-- 10s 소요: Taking off")
         connection.mav.command_long_send(
             connection.target_system, connection.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0 , 10, 0, 0, 0, 0, 0, 30
+            mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0, 10, 0, 0, 0, 0, 0, altitude
         )
 
-    takeoff()
-    time.sleep(3)
+    takeoff(10)
+    time.sleep(10)
 
     # 착륙
     def land():
@@ -56,7 +57,7 @@ def main():
         )
 
     land()
-    time.sleep(3)
+    time.sleep(10)
     
     print("-- Disarm")
     connection.mav.command_long_send(
