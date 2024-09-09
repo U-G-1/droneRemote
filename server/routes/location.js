@@ -26,6 +26,8 @@ router.post('/execute', (req, res) => {
         scriptPath = path.join(__dirname, '..', 'pyCode', 'drone_save_test.py');
     }else if(chimney==3) {
         scriptPath = path.join(__dirname, '..', 'pyCode', 'drone_arming_test.py');
+    }else if(chimney==4) {
+        scriptPath = path.join(__dirname, '..', 'pyCode', 'mavDroneTest2.py');
     }
 
     // 스크립트 경로가 설정되지 않은 경우 오류 반환
