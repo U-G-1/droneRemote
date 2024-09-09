@@ -58,7 +58,7 @@ def main():
             print(f"Mode {mode} is not available.")
 
     # 'Stabilize' 모드로 변경
-    set_mode('Stabilize')
+    #set_mode('AUTO')
 
      # ARMING
     print("-- 3s 소요 Arming")
