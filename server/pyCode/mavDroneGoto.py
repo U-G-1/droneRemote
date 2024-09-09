@@ -44,21 +44,10 @@ def main():
     time.sleep(5)
 
     # set_mode("Stabilize")
-    def set_mode(mode):
-        mode_mapping = connection.mode_mapping()  # 모드 매핑을 가져옵니다
-        if mode in mode_mapping:
-            mode_id = mode_mapping[mode]  # 모드 ID를 가져옵니다
-            connection.mav.set_mode_send(
-                connection.target_system,  # 드론의 시스템 ID
-                mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,  # 사용자 정의 모드 플래그
-                mode_id  # 사용자 정의 모드 ID
-            )
-            print(f"Mode set to {mode}.")
-        else:
-            print(f"Mode {mode} is not available.")
-
-    # 'Stabilize' 모드로 변경
-    set_mode('AUTO')
+    connection.mav.set_mode_send(
+    connection.target_system,
+    mavutil.mavlink.MAV_MODE_GUIDED_ARMED, 0  # GUIDED 모드로 설정
+)
 
      # ARMING
     print("-- 3s 소요 Arming")
@@ -84,15 +73,9 @@ def main():
     # 점으로 이동
     def goto(lat, lon, alt):
         print("goto 시작")
-        connection.mav.set_mode_send(
-        connection.target_system, 
-        mavutil.mavlink.MAV_MODE_AUTO_ARMED,0  # AUTO 모드로 설정
-        )
-        time.sleep(5)  # 모드 변경 후 대기
-
         connection.mav.command_long_send(
             connection.target_system, connection.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 5, 0, 0, 0, lat, lon, alt
+            mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 5, 0, 0, 0, int(lat * 1e7), int(lon * 1e7),  # 경도, alt
         )
         time.sleep(15)
  
