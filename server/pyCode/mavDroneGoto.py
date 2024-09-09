@@ -43,6 +43,14 @@ def main():
 
     time.sleep(5)
 
+     # ARMING
+    print("-- 3s 소요 Arming")
+    connection.arducopter_arm()
+    """connection.mav.command_long_send(
+            connection.target_system, connection.target_component,
+            mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM, 1)"""
+    time.sleep(5)
+
     def set_mode(connection, base, custom):
         print(f"Setting mode to {custom}...")
         connection.mav.set_mode_send(
@@ -53,14 +61,6 @@ def main():
         time.sleep(5) 
 
     set_mode(connection, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, mavutil.mavlink.MAV_MODE_GUIDED_ARMED)  # GUIDED 모드 설정
-
-     # ARMING
-    print("-- 3s 소요 Arming")
-    connection.arducopter_arm()
-    """connection.mav.command_long_send(
-            connection.target_system, connection.target_component,
-            mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM, 1)"""
-    time.sleep(5)
 
     # 이륙
     def takeoff(altitude):
