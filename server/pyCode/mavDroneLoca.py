@@ -30,9 +30,7 @@ def main():
         if gps_status.fix_type >= 2:  # 2 = 2D fix, 3 = 3D fix
             print("-- Global position state is good enough for flying.")
 
-            print(f"Latitude: {gps_status.lat}")
-            print(f"Longitude: {gps_status.lon}")
-            print(f"Altitude: {gps_status.alt}")
+            print(f"{gps_status.lat}, {gps_status.lon}, {gps_status.alt}")
                     
         else:
             print("Waiting for GPS data...")
