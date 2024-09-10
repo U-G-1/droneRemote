@@ -62,8 +62,10 @@ def main():
 
     takeoff(10)
     time.sleep(5)
+    print('takeoff end')
     
     def goto_position():
+        print('start goto')
         connection.mav.command_long_send(
             connection.target_system,
             connection.target_component,
