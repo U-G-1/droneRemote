@@ -2,7 +2,8 @@ import time
 from pymavlink import mavutil
 
 # 드론과 연결 설정 (MAVLink)
-connection = mavutil.mavlink_connection('udp:127.0.0.1:14550')
+#connection = mavutil.mavlink_connection('udp:127.0.0.1:14550')
+connection = mavutil.mavlink_connection('serial///dev/ttyUSB0:921600')
 
 # Heartbeat 수신 대기 (드론과의 연결 확인)
 connection.wait_heartbeat()

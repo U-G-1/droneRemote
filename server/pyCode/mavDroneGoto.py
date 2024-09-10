@@ -34,8 +34,8 @@ def send_heartbeat(master):
 
 def main():
     # 연결 설정 (UDP 연결 예시)
-    connection = mavutil.mavlink_connection('udp:127.0.0.1:14540')
-    #connection = mavutil.mavlink_connection('serial///dev/ttyUSB0:921600')
+    #connection = mavutil.mavlink_connection('udp:127.0.0.1:14540')
+    connection = mavutil.mavlink_connection('serial///dev/ttyUSB0:921600')
 
    # Heartbeat 수신 대기 (드론과의 연결 확인)
     print("Connecting to the drone...")

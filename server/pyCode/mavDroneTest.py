@@ -13,8 +13,8 @@ def send_heartbeat(master):
 
 def main():
     # 연결 설정 (UDP 연결 예시)
-    connection = mavutil.mavlink_connection('udp:127.0.0.1:14550')
-    #connection = mavutil.mavlink_connection('serial///dev/ttyUSB0:921600')
+    #connection = mavutil.mavlink_connection('udp:127.0.0.1:14550')
+    connection = mavutil.mavlink_connection('serial///dev/ttyUSB0:921600')
 
    # Heartbeat 수신 대기 (드론과의 연결 확인)
     print("Connecting to the drone...")
@@ -75,10 +75,10 @@ def main():
             connection.target_system, connection.target_component,
             mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0, 5, 0, 0, 0, 37.5479590, 127.1197123, altitude
         )
-        time.sleep(10)
+        time.sleep(15)
 
     takeoff(10)
-    time.sleep(10)
+    time.sleep(5)
 
     # 착륙
     def land():
@@ -87,9 +87,10 @@ def main():
             connection.target_system, connection.target_component,
             mavutil.mavlink.MAV_CMD_NAV_LAND, 0, 0, 0, 0, 0, 37.5479590, 127.1197123, 7
         )
+        time.sleep(15)
 
     land()
-    time.sleep(20)
+    time.sleep(10)
     
     print("-- Disarm")
     connection.mav.command_long_send(
