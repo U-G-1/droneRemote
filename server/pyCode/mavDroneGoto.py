@@ -68,7 +68,7 @@ def main():
         mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
         mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,
         0, 0, 0, 0, 0, 0,
-        latitude, longitude, altitude
+        37.54725695650923, 127.12157164094592, 20
     )
 
     # 명령 실행 후 대기
