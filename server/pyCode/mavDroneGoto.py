@@ -51,15 +51,19 @@ def main():
             mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM, 1)"""
     time.sleep(5)
 
-    def set_mode_guided(connection):
-    # GUIDED 모드로 전환
-        mode_id = connection.mode_mapping()['GUIDED']
-        connection.mav.set_mode_send(
-            connection.target_system,
-            mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
-            mode_id)
+    def set_guided_mode(master):
+        # MAV_MODE_FLAG_CUSTOM_MODE_ENABLED = 1 << 7 플래그 사용
+        custom_mode = mavutil.mavlink.MAV_MODE_GUIDED
+        master.mav.set_mode_send(
+            master.target_system,
+            mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,  # Custom 모드 플래그
+            custom_mode  # GUIDED 모드로 전환
+        )
+        # 응답 대기
+        ack = master.recv_match(type='COMMAND_ACK', blocking=True)
+        print(ack)
     
-    set_mode_guided(connection)
+    set_guided_mode(connection)
 
     connection.mav.mission_item_send(
         connection.target_system,
