@@ -82,7 +82,7 @@ def main():
             connection.target_system, connection.target_component,
             mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0, 5, 0, 0, 0, 37.5479590, 127.1197123, altitude
         )
-        time.sleep(10)
+        time.sleep(15)
 
     takeoff(10)
     time.sleep(5)
@@ -108,23 +108,25 @@ def main():
        
         connection.mav.command_long_send(
             connection.target_system, connection.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 5000, 0, 0, 0, int(lat * 1e7), int(lon * 1e7),  alt
+            mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 5000, 0, 0, 0, lat, lon, alt
         )
         print("goto end")
-        time.sleep(15)
+        time.sleep(30)
  
-    goto(37.54725695650923, 127.12157164094592, 20)
-    
+    goto(37.62580948741104, 127.08915125873155, 55)
+    time.sleep(10)
+
     # 착륙
     def land():
         print("-- 10s 소요: Landing")
         connection.mav.command_long_send(
             connection.target_system, connection.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_LAND, 0, 0, 0, 0, 0, 37.5479590, 127.1197123, 7
+            mavutil.mavlink.MAV_CMD_NAV_LAND, 0, 0, 0, 0, 0, 37.62608777661077, 127.08914052989549, 33
         )
+        time.sleep(30)
 
     land()
-    time.sleep(15)
+    time.sleep(10)
     
     print("-- Disarm")
     connection.mav.command_long_send(
