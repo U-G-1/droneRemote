@@ -60,7 +60,7 @@ def main():
         )
         time.sleep(5) 
 
-    set_mode(connection, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, mavutil.mavlink.MAV_MODE_GUIDED_ARMED)  # GUIDED 모드 설정
+    #set_mode(connection, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, mavutil.mavlink.MAV_MODE_GUIDED_ARMED)  # GUIDED 모드 설정
 
     # 이륙
     def takeoff(altitude):
