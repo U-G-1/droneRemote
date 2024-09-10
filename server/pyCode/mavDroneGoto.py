@@ -24,15 +24,15 @@ def get_drone_mode(connection):
     mode_mapping = connection.mode_mapping()
     
     # 현재 모드 탐색
-    current_mode = None
+    base_mode = None
     for mode_name, mode_id in mode_mapping.items():
-        if mode_id == custom_mode:
-            current_mode = mode_name
+        if mode_id == base_mode:
+            base_mode = mode_name
             break
     
     # 현재 모드 출력
-    if current_mode:
-        print(f"Current drone mode: {current_mode}")
+    if base_mode:
+        print(f"Current drone mode: {base_mode}")
     else:
         print("Unable to determine the current drone mode.")
 
