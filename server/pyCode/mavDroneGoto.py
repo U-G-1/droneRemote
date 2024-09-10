@@ -51,6 +51,18 @@ def main():
             mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM, 1)"""
     time.sleep(5)
 
+    # 이륙
+    def takeoff(altitude):
+        print("-- 10s 소요: Taking off")
+        connection.mav.command_long_send(
+            connection.target_system, connection.target_component,
+            mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0, 5, 0, 0, 0, 37.5479590, 127.1197123, altitude
+        )
+        time.sleep(5)
+
+    takeoff(10)
+    time.sleep(5)
+    
     def set_guided_mode(master):
         # MAV_MODE_FLAG_CUSTOM_MODE_ENABLED = 1 << 7 플래그 사용
         custom_mode = mavutil.mavlink.MAV_MODE_GUIDED_ARMED
