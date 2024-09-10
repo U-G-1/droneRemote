@@ -72,6 +72,9 @@ def main():
             mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM, 1)"""
     time.sleep(5)
 
+    get_drone_mode(connection)
+    time.sleep(5)
+
     # 이륙
     def takeoff(altitude):
         print("-- 10s 소요: Taking off")
@@ -94,12 +97,6 @@ def main():
         )
         
     setmode(connection)
-
-    """def set_guided_mode():
-    # 모드를 GUIDED로 변경
-        connection.set_mode_loiter()
-
-    set_guided_mode()"""
     time.sleep(5)
 
     get_drone_mode(connection)
