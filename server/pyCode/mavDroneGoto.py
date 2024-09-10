@@ -60,7 +60,7 @@ def main():
         )
         time.sleep(5) 
 
-    #set_mode(connection, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, mavutil.mavlink.MAV_MODE_GUIDED_ARMED)  # GUIDED 모드 설정
+    set_mode(connection, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, mavutil.mavlink.MAV_MODE_GUIDED_ARMED)  # GUIDED 모드 설정
 
     # 이륙
     def takeoff(altitude):
@@ -76,16 +76,16 @@ def main():
 
     
     # 점으로 이동
-    def goto(lat, lon, alt):
+    def goto(alt):
         print("goto 시작")
        
         connection.mav.command_long_send(
             connection.target_system, connection.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 5, 0, 0, 0, int(lat * 1e7), int(lon * 1e7),  alt
+            mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 5, 0, 0, 0, 2, 2,  alt
         )
         time.sleep(15)
  
-    goto(37.54725695650923, 127.12157164094592, 20)
+    goto(20)
     
     # 착륙
     def land():
