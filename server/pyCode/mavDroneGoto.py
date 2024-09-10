@@ -69,10 +69,10 @@ def main():
             connection.target_component,
             mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,  # Waypoint 명령 사용
             0,
-            0, 0, 0, 0,
+            5, 1, 0, 0,
             37.54725695650923 * 1e7,   # 목표 좌표의 위도
             127.12157164094592 * 1e7,  # 목표 좌표의 경도
-            20          # 목표 고도
+            50          # 목표 고도
         )
 
     goto_position()
