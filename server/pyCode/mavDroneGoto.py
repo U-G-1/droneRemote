@@ -89,20 +89,22 @@ def main():
     takeoff(10)
     time.sleep(5)
 
-    def setmode():
-        connection.mav.set_mode_send(
-        connection.target_system,   # uint8_t (시스템 ID): 비행 모드를 설정할 시스템의 ID
-        connection.MAV_MODE_GUIDED_ARMED,            # uint32_t (모드): 비행 모드 (비트 플래그 형식으로 설정)
-        0      # uint32_t (커스텀 모드): 특정 커스텀 모드 (일반적으로 사용하지 않음)
-    )
+    def setmode(connection):
+        # GUIDED 모드로 전환
+        connection.mav.command_long_send(
+            1, 1, mavutil.mavlink.MAV_CMD_DO_SET_MODE, 0,
+            1,  # 주요 모드
+            mavutil.mavlink.MAV_MODE_GUIDED_ARMED,  # GUIDED 모드
+            0, 0, 0, 0, 0
+        )
         
-    #setmode()
+    setmode(connection)
 
-    def set_guided_mode():
+    """def set_guided_mode():
     # 모드를 GUIDED로 변경
         connection.set_mode_loiter()
 
-    set_guided_mode()
+    set_guided_mode()"""
     time.sleep(5)
 
     get_drone_mode(connection)
