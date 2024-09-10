@@ -64,6 +64,7 @@ def main():
     time.sleep(5)
     
     def set_guided_mode(master):
+        print('모드 변경 완료')
         # MAV_MODE_FLAG_CUSTOM_MODE_ENABLED = 1 << 7 플래그 사용
         custom_mode = mavutil.mavlink.MAV_MODE_GUIDED_ARMED
         master.mav.set_mode_send(
@@ -77,7 +78,19 @@ def main():
     
     set_guided_mode(connection)
 
+    msg = master.recv_match(type='HEARTBEAT', blocking=True)
+    if msg:
+        base_mode = msg.base_mode
+        custom_mode = msg.custom_mode
+
+        # 기본 모드 출력
+        print(f"Base Mode: {base_mode}")
+
+        # 커스텀 모드 출력
+        print(f"Custom Mode: {custom_mode}")
+
     connection.mav.mission_item_send(
+        print('이동')
         connection.target_system,
         connection.target_component,
         0,
