@@ -90,7 +90,6 @@ def main():
         print(f"Custom Mode: {custom_mode}")
 
     connection.mav.mission_item_send(
-        print('이동')
         connection.target_system,
         connection.target_component,
         0,
