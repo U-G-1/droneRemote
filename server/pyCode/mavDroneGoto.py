@@ -114,10 +114,10 @@ def main():
        
         connection.mav.command_long_send(
             connection.target_system, connection.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 5, 0, 0, 0, int(lat * 1e7), int(lon * 1e7),  alt
+            mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 5000, 0, 0, 0, int(lat * 1e7), int(lon * 1e7),  alt
         )
-        time.sleep(15)
         print("goto end")
+        time.sleep(15)
  
     goto(37.54725695650923, 127.12157164094592, 20)
     
