@@ -100,7 +100,7 @@ def main():
 
     def set_guided_mode():
     # 모드를 GUIDED로 변경
-        connection.set_mode_guided()
+        connection.set_mode_loiter()
 
     set_guided_mode()
     time.sleep(5)
