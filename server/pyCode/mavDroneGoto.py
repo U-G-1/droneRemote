@@ -96,7 +96,13 @@ def main():
         0      # uint32_t (커스텀 모드): 특정 커스텀 모드 (일반적으로 사용하지 않음)
     )
         
-    setmode()
+    #setmode()
+
+    def set_guided_mode():
+    # 모드를 GUIDED로 변경
+        connection.set_mode_guided()
+
+    set_guided_mode()
     time.sleep(5)
 
     get_drone_mode(connection)
