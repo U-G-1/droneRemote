@@ -11,6 +11,32 @@ def send_heartbeat(master):
                 0, 0, 4)
             time.sleep(1)  # 1초마다 heartbeat 전송
 
+def get_drone_mode(connection):
+    # HEARTBEAT 메시지 수신 대기
+    print("Waiting for a heartbeat to check the mode...")
+    heartbeat = connection.recv_match(type='HEARTBEAT', blocking=True)
+    
+    # 현재 모드 가져오기
+    custom_mode = heartbeat.custom_mode
+    base_mode = heartbeat.base_mode
+
+    # 모드 맵핑 가져오기
+    mode_mapping = connection.mode_mapping()
+    
+    # 현재 모드 탐색
+    current_mode = None
+    for mode_name, mode_id in mode_mapping.items():
+        if mode_id == custom_mode:
+            current_mode = mode_name
+            break
+    
+    # 현재 모드 출력
+    if current_mode:
+        print(f"Current drone mode: {current_mode}")
+    else:
+        print("Unable to determine the current drone mode.")
+
+
 def main():
     # 연결 설정 (UDP 연결 예시)
     connection = mavutil.mavlink_connection('udp:127.0.0.1:14550')
@@ -58,30 +84,36 @@ def main():
             connection.target_system, connection.target_component,
             mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0, 5, 0, 0, 0, 37.5479590, 127.1197123, altitude
         )
-        time.sleep(5)
+        time.sleep(10)
 
     takeoff(10)
     time.sleep(5)
-    print('takeoff end')
-    
-    def goto_position():
-        print('start goto')
-        connection.mav.command_long_send(
-            connection.target_system,
-            connection.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,  # Waypoint 명령 사용
-            0,
-            5000, 1, 0, 0,
-            37.5479,   # 목표 좌표의 위도
-            127.1197,  # 목표 좌표의 경도
-            50          # 목표 고도
-        )
-        print('end goto')
 
-    goto_position()
+    def setmode():
+        connection.mav.set_mode_send(
+        connection.target_system,   # uint8_t (시스템 ID): 비행 모드를 설정할 시스템의 ID
+        connection.MAV_MODE_GUIDED_ARMED,            # uint32_t (모드): 비행 모드 (비트 플래그 형식으로 설정)
+        0      # uint32_t (커스텀 모드): 특정 커스텀 모드 (일반적으로 사용하지 않음)
+    )
+        
+    setmode()
     time.sleep(5)
-    print('end goto time sleep')
 
+    get_drone_mode(connection)
+    time.sleep(5)
+    
+    # 점으로 이동
+    def goto(lat, lon, alt):
+        print("goto 시작")
+       
+        connection.mav.command_long_send(
+            connection.target_system, connection.target_component,
+            mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 5, 0, 0, 0, int(lat * 1e7), int(lon * 1e7),  alt
+        )
+        time.sleep(15)
+ 
+    goto(37.54725695650923, 127.12157164094592, 20)
+    
     # 착륙
     def land():
         print("-- 10s 소요: Landing")
