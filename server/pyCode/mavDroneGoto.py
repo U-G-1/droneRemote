@@ -16,25 +16,20 @@ def get_drone_mode(connection):
     print("Waiting for a heartbeat to check the mode...")
     heartbeat = connection.recv_match(type='HEARTBEAT', blocking=True)
     
-    # 현재 모드 가져오기
-    custom_mode = heartbeat.custom_mode
-    base_mode = heartbeat.base_mode
-
-    # 모드 맵핑 가져오기
-    mode_mapping = connection.mode_mapping()
-    
-    # 현재 모드 탐색
-    base_mode = None
-    for mode_name, mode_id in mode_mapping.items():
-        if mode_id == base_mode:
-            base_mode = mode_name
-            break
-    
-    # 현재 모드 출력
-    if base_mode:
-        print(f"Current drone mode: {base_mode}")
+    if heartbeat:
+        # 기본 모드 추출
+        base_mode = heartbeat.base_mode
+        # 커스텀 모드 추출
+        custom_mode = heartbeat.custom_mode
+        
+        # 현재 모드를 해석
+        mode = mavutil.mode_string_v10(heartbeat)
+        
+        print(f"Current mode: {base_mode}, {mode}")
+        return base_mode, mode
     else:
-        print("Unable to determine the current drone mode.")
+        print("Failed to receive HEARTBEAT message.")
+        return None
 
 
 def main():
@@ -132,7 +127,7 @@ def main():
         )
 
     land()
-    time.sleep(5)
+    time.sleep(15)
     
     print("-- Disarm")
     connection.mav.command_long_send(
