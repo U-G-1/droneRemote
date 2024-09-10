@@ -63,52 +63,37 @@ def main():
     takeoff(10)
     time.sleep(5)
     
-    def set_guided_mode(master):
-        print('모드 변경 완료')
-        # MAV_MODE_FLAG_CUSTOM_MODE_ENABLED = 1 << 7 플래그 사용
-        custom_mode = mavutil.mavlink.MAV_MODE_GUIDED_ARMED
-        master.mav.set_mode_send(
-            master.target_system,
-            mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,  # Custom 모드 플래그
-            custom_mode  # GUIDED 모드로 전환
+    def goto_position():
+        connection.mav.command_long_send(
+            connection.target_system,
+            connection.target_component,
+            mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,  # Waypoint 명령 사용
+            0,
+            0, 0, 0, 0,
+            37.54725695650923 * 1e7,   # 목표 좌표의 위도
+            127.12157164094592 * 1e7,  # 목표 좌표의 경도
+            20          # 목표 고도
         )
-        # 응답 대기
-        ack = master.recv_match(type='COMMAND_ACK', blocking=True)
-        print(ack)
+
+    goto_position()
+    time.sleep(5)
+
+    # 착륙
+    def land():
+        print("-- 10s 소요: Landing")
+        connection.mav.command_long_send(
+            connection.target_system, connection.target_component,
+            mavutil.mavlink.MAV_CMD_NAV_LAND, 0, 0, 0, 0, 0, 37.5479590, 127.1197123, 7
+        )
+
+    land()
+    time.sleep(5)
     
-    set_guided_mode(connection)
-
-    msg = master.recv_match(type='HEARTBEAT', blocking=True)
-    if msg:
-        base_mode = msg.base_mode
-        custom_mode = msg.custom_mode
-
-        # 기본 모드 출력
-        print(f"Base Mode: {base_mode}")
-
-        # 커스텀 모드 출력
-        print(f"Custom Mode: {custom_mode}")
-
-    connection.mav.mission_item_send(
-        connection.target_system,
-        connection.target_component,
-        0,
-        mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
-        mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,
-        0, 0, 0, 0, 0, 0,
-        37.54725695650923, 127.12157164094592, 20
-    )
-
-    # 명령 실행 후 대기
+    print("-- Disarm")
     connection.mav.command_long_send(
         connection.target_system,
         connection.target_component,
-        mavutil.mavlink.MAV_CMD_DO_CHANGE_SPEED,
-        0,
-        1,    # 속도 유형 (1 = 속도, 0 = 속도 유지)
-        5,    # 목표 속도 (m/s)
-        -1,   # 속도 유지
-        0, 0, 0, 0
+        mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM,0,0,0,0,0,0,0,0
     )
 
 if __name__ == "__main__":
