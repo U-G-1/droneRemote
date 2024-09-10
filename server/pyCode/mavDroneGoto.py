@@ -53,7 +53,7 @@ def main():
 
     def set_guided_mode(master):
         # MAV_MODE_FLAG_CUSTOM_MODE_ENABLED = 1 << 7 플래그 사용
-        custom_mode = mavutil.mavlink.MAV_MODE_GUIDED
+        custom_mode = mavutil.mavlink.MAV_MODE_GUIDED_ARMED
         master.mav.set_mode_send(
             master.target_system,
             mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,  # Custom 모드 플래그
