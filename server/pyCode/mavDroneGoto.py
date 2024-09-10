@@ -76,9 +76,11 @@ def main():
             127.1197,  # 목표 좌표의 경도
             50          # 목표 고도
         )
+        print('end goto')
 
     goto_position()
     time.sleep(5)
+    print('end goto time sleep')
 
     # 착륙
     def land():
