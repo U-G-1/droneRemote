@@ -76,16 +76,16 @@ def main():
 
     
     # 점으로 이동
-    def goto(alt):
+    def goto(lat, lon, alt):
         print("goto 시작")
        
         connection.mav.command_long_send(
             connection.target_system, connection.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 5, 0, 0, 0, 2, 2,  alt
+            mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 5, 0, 0, 0, int(lat * 1e7), int(lon * 1e7),  alt
         )
         time.sleep(15)
  
-    goto(20)
+    goto(37.54725695650923, 127.12157164094592, 20)
     
     # 착륙
     def land():
