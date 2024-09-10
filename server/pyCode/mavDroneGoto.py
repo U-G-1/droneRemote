@@ -25,8 +25,8 @@ def get_drone_mode(connection):
         # 현재 모드를 해석
         mode = mavutil.mode_string_v10(heartbeat)
         
-        print(f"Current mode: {custom_mode}, {mode}")
-        return custom_mode, mode
+        print(f"Current mode: {base_mode}, {custom_mode}, {mode}")
+        return base_mode, custom_mode, mode
     else:
         print("Failed to receive HEARTBEAT message.")
         return None
@@ -91,8 +91,8 @@ def main():
         # GUIDED 모드로 전환
         connection.mav.command_long_send(
             1, 1, mavutil.mavlink.MAV_CMD_DO_SET_MODE, 0,
-            1,  # 주요 모드
-            mavutil.mavlink.MAV_MODE_GUIDED_ARMED,  # GUIDED 모드
+            mavutil.mavlink.MAV_MODE_GUIDED_ARMED,  # 주요 모드
+            0,  # GUIDED 모드
             0, 0, 0, 0, 0
         )
         
