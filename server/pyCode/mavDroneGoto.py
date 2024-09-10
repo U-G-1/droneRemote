@@ -11,25 +11,25 @@ def send_heartbeat(master):
                 0, 0, 4)
             time.sleep(1)  # 1초마다 heartbeat 전송
 
-def get_drone_mode(connection):
-    # HEARTBEAT 메시지 수신 대기
-    print("Waiting for a heartbeat to check the mode...")
-    heartbeat = connection.recv_match(type='HEARTBEAT', blocking=True)
+# def get_drone_mode(connection):
+#     # HEARTBEAT 메시지 수신 대기
+#     print("Waiting for a heartbeat to check the mode...")
+#     heartbeat = connection.recv_match(type='HEARTBEAT', blocking=True)
     
-    if heartbeat:
-        # 기본 모드 추출
-        base_mode = heartbeat.base_mode
-        # 커스텀 모드 추출
-        custom_mode = heartbeat.custom_mode
+#     if heartbeat:
+#         # 기본 모드 추출
+#         base_mode = heartbeat.base_mode
+#         # 커스텀 모드 추출
+#         custom_mode = heartbeat.custom_mode
         
-        # 현재 모드를 해석
-        mode = mavutil.mode_string_v10(heartbeat)
+#         # 현재 모드를 해석
+#         mode = mavutil.mode_string_v10(heartbeat)
         
-        print(f"Current mode: {base_mode}, {custom_mode}, {mode}")
-        return base_mode, custom_mode, mode
-    else:
-        print("Failed to receive HEARTBEAT message.")
-        return None
+#         print(f"Current mode: {base_mode}, {custom_mode}, {mode}")
+#         return base_mode, custom_mode, mode
+#     else:
+#         print("Failed to receive HEARTBEAT message.")
+#         return None
 
 
 def main():
@@ -72,8 +72,8 @@ def main():
             mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM, 1)"""
     time.sleep(5)
 
-    get_drone_mode(connection)
-    time.sleep(5)
+    #get_drone_mode(connection)
+    #time.sleep(5)
 
     # 이륙
     def takeoff(altitude):
@@ -87,7 +87,7 @@ def main():
     takeoff(10)
     time.sleep(5)
 
-    def setmode(connection):
+    """def setmode(connection):
         # GUIDED 모드로 전환
         connection.mav.command_long_send(
             1, 1, mavutil.mavlink.MAV_CMD_DO_SET_MODE, 0,
@@ -100,7 +100,7 @@ def main():
     time.sleep(5)
 
     get_drone_mode(connection)
-    time.sleep(5)
+    time.sleep(5)"""
     
     # 점으로 이동
     def goto(lat, lon, alt):
