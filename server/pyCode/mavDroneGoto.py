@@ -1,8 +1,9 @@
-#코드내용
 
 import time
 import threading
 from pymavlink import mavutil
+
+connection = None
 
 def send_heartbeat(master):
         while True:
@@ -32,14 +33,9 @@ def get_drone_mode(connection):
         print("Failed to receive HEARTBEAT message.")
         return None
 
-connection = mavutil.mavlink_connection('udp:127.0.0.1:14550')
-#connection = mavutil.mavlink_connection('serial///dev/ttyUSB0:921600')
-
 def main():
-    connection = mavutil.mavlink_connection('udp:127.0.0.1:14550')
-    #connection = mavutil.mavlink_connection('serial///dev/ttyUSB0:921600')
-
-
+    global connection
+   
    # Heartbeat 수신 대기 (드론과의 연결 확인)
     print("Connecting to the drone...")
     connection.wait_heartbeat(20)
@@ -75,21 +71,20 @@ def main():
             mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM, 1)"""
     time.sleep(5)
 
-    get_drone_mode(connection)
-
     # 이륙
     def takeoff(altitude):
         print("-- 10s 소요: Taking off")
         connection.mav.command_long_send(
             connection.target_system, connection.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0, 5, 0, 0, 0, 375479590, 1271197123, altitude
+            mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0, 5, 0, 0, 0, 37.5479590, 127.1197123, altitude
         )
-        time.sleep(10)
+        time.sleep(5)
 
     takeoff(10)
     time.sleep(5)
 
-        # 점으로 이동
+   
+    # 점으로 이동
     def goto(lat, lon, alt):
         print("goto 시작")
        
@@ -103,13 +98,12 @@ def main():
     goto(37.62580948741104, 127.08915125873155, 55)
     time.sleep(10)
 
-   
     # 착륙
     def land():
         print("-- 10s 소요: Landing")
         connection.mav.command_long_send(
             connection.target_system, connection.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_LAND, 0, 0, 0, 0, 0, 375479590, 1271197123, 7
+            mavutil.mavlink.MAV_CMD_NAV_LAND, 0, 0, 0, 0, 0, 37.5479590, 127.1197123, 7
         )
 
     land()
@@ -123,7 +117,9 @@ def main():
     )
 
 if __name__ == "__main__":
+    # 연결 설정 (UDP 연결 예시)
+    connection = mavutil.mavlink_connection('udp:127.0.0.1:14540')
+    #connection = mavutil.mavlink_connection('serial///dev/ttyUSB0:921600')
+
     main()
-
-
 
