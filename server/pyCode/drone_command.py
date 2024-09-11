@@ -19,14 +19,14 @@ from pymavlink import mavutil
 #  If you want to use QGroundControl in parallel with your python script,
 #  it's possible to add a new output port in http:192.168.2.2:2770/mavproxy as a new line.
 #  E.g: --out udpbcast:192.168.2.255:yourport
-master = mavutil.mavlink_master('udp:0.0.0.0:14550')
+master = mavutil.mavlink_connection('udp:0.0.0.0:14550')
 
 # Make sure the master is valid
 master.wait_heartbeat()
 
 # Get some information !
 while True:
-    command = int(input("enter menu\n1. get gps data\n2. arm\n3. disarm\n4. takeoff\n5. land"))
+    command = int(input("enter menu\n1. get gps data\n2. arm\n3. takeoff\n4. land\n5. disarm\n"))
     
     if(command==1): # get gps
         try:
@@ -50,27 +50,30 @@ while True:
         master.motors_armed_wait()
         print('Armed!\n\n')
 
-    elif(command==3): # disarm
+    elif(command==3): # takeoff
+        master.mav.command_long_send(
+            master.target_system, master.target_component,
+            mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0, 5, 0, 0, 0, 37.5479590, 127.1197123, 10
+        )
+        print('Takeoff!\n\n')
+        time.sleep(10)
+
+    elif(command==4): # land
+        master.mav.command_long_send(
+            master.target_system, master.target_component,
+            mavutil.mavlink.MAV_CMD_NAV_LAND, 0, 0, 0, 0, 0, 37.5479590, 127.1197123, 33
+        )
+        print('Land!\n\n')
+        time.sleep(10)
+
+    elif(command==5): # disarm
         master.mav.command_long_send(
             master.target_system,
             master.target_component,
             mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM,
             0,
             0, 0, 0, 0, 0, 0, 0)
-
-    elif(command==4): # takeoff
-        master.mav.command_long_send(
-            master.target_system, master.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0, 5, 0, 0, 0, 37.5479590, 127.1197123, 10
-        )
-        time.sleep(15)
-
-    elif(command==5): # land
-        master.mav.command_long_send(
-            master.target_system, master.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_LAND, 0, 0, 0, 0, 0, 37.62608777661077, 127.08914052989549, 33
-        )
-        time.sleep(30)
+        print('Disarmed!\n\n')
 
         # wait until disarming confirmed
         print("Waiting for the vehicle to disarm")
