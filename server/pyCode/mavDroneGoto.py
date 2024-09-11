@@ -1,3 +1,4 @@
+#코드내용
 
 import time
 import threading
@@ -7,35 +8,34 @@ def send_heartbeat(master):
         while True:
             master.mav.heartbeat_send(
                 mavutil.mavlink.MAV_TYPE_GCS,  # Ground Control Station 타입
-                mavutil.mavlink.MAV_AUTOPILOT_INVALID, 
+                mavutil.mavlink.MAV_AUTOPILOT_INVALID,
                 0, 0, 4)
             time.sleep(1)  # 1초마다 heartbeat 전송
 
-# def get_drone_mode(connection):
-#     # HEARTBEAT 메시지 수신 대기
-#     print("Waiting for a heartbeat to check the mode...")
-#     heartbeat = connection.recv_match(type='HEARTBEAT', blocking=True)
-    
-#     if heartbeat:
-#         # 기본 모드 추출
-#         base_mode = heartbeat.base_mode
-#         # 커스텀 모드 추출
-#         custom_mode = heartbeat.custom_mode
-        
-#         # 현재 모드를 해석
-#         mode = mavutil.mode_string_v10(heartbeat)
-        
-#         print(f"Current mode: {base_mode}, {custom_mode}, {mode}")
-#         return base_mode, custom_mode, mode
-#     else:
-#         print("Failed to receive HEARTBEAT message.")
-#         return None
+def get_drone_mode(connection):
+    # HEARTBEAT 메시지 수신 대기
+    print("Waiting for a heartbeat to check the mode...")
+    heartbeat = connection.recv_match(type='HEARTBEAT', blocking=True)
+   
+    if heartbeat:
+        # 기본 모드 추출
+        base_mode = heartbeat.base_mode
+        # 커스텀 모드 추출
+        custom_mode = heartbeat.custom_mode
+       
+        # 현재 모드를 해석
+        mode = mavutil.mode_string_v10(heartbeat)
+       
+        print(f"Current mode: {base_mode}, {custom_mode}, {mode}")
+        return base_mode, custom_mode, mode
+    else:
+        print("Failed to receive HEARTBEAT message.")
+        return None
 
+connection = mavutil.mavlink_connection('udp:127.0.0.1:14550')
+#connection = mavutil.mavlink_connection('serial///dev/ttyUSB0:921600')
 
 def main():
-    # 연결 설정 (UDP 연결 예시)
-    #connection = mavutil.mavlink_connection('udp:127.0.0.1:14540')
-    connection = mavutil.mavlink_connection('serial///dev/ttyUSB0:921600')
 
    # Heartbeat 수신 대기 (드론과의 연결 확인)
     print("Connecting to the drone...")
@@ -72,43 +72,27 @@ def main():
             mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM, 1)"""
     time.sleep(5)
 
-    #get_drone_mode(connection)
-    #time.sleep(5)
+    get_drone_mode(connection)
 
     # 이륙
     def takeoff(altitude):
         print("-- 10s 소요: Taking off")
         connection.mav.command_long_send(
             connection.target_system, connection.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0, 5, 0, 0, 0, 37.5479590, 127.1197123, altitude
+            mavutil.mavlink.MAV_CMD_NAV_TAKEOFF, 0, 5, 0, 0, 0, 375479590, 1271197123, altitude
         )
-        time.sleep(15)
+        time.sleep(10)
 
     takeoff(10)
     time.sleep(5)
 
-    """def setmode(connection):
-        # GUIDED 모드로 전환
-        connection.mav.command_long_send(
-            1, 1, mavutil.mavlink.MAV_CMD_DO_SET_MODE, 0,
-            mavutil.mavlink.MAV_MODE_GUIDED_ARMED,  # 주요 모드
-            0,  # GUIDED 모드
-            0, 0, 0, 0, 0
-        )
-        
-    setmode(connection)
-    time.sleep(5)
-
-    get_drone_mode(connection)
-    time.sleep(5)"""
-    
-    # 점으로 이동
+        # 점으로 이동
     def goto(lat, lon, alt):
         print("goto 시작")
        
         connection.mav.command_long_send(
             connection.target_system, connection.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 5000, 0, 0, 0, lat, lon, alt
+            mavutil.mavlink.MAV_CMD_NAV_WAYPOINT, 0, 5, 0, 0, 0, lat, lon, alt
         )
         print("goto end")
         time.sleep(30)
@@ -116,18 +100,18 @@ def main():
     goto(37.62580948741104, 127.08915125873155, 55)
     time.sleep(10)
 
+   
     # 착륙
     def land():
         print("-- 10s 소요: Landing")
         connection.mav.command_long_send(
             connection.target_system, connection.target_component,
-            mavutil.mavlink.MAV_CMD_NAV_LAND, 0, 0, 0, 0, 0, 37.62608777661077, 127.08914052989549, 33
+            mavutil.mavlink.MAV_CMD_NAV_LAND, 0, 0, 0, 0, 0, 375479590, 1271197123, 7
         )
-        time.sleep(30)
 
     land()
-    time.sleep(10)
-    
+    time.sleep(5)
+   
     print("-- Disarm")
     connection.mav.command_long_send(
         connection.target_system,
@@ -137,3 +121,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
