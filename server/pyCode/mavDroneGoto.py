@@ -36,6 +36,9 @@ connection = mavutil.mavlink_connection('udp:127.0.0.1:14550')
 #connection = mavutil.mavlink_connection('serial///dev/ttyUSB0:921600')
 
 def main():
+    connection = mavutil.mavlink_connection('udp:127.0.0.1:14550')
+    #connection = mavutil.mavlink_connection('serial///dev/ttyUSB0:921600')
+
 
    # Heartbeat 수신 대기 (드론과의 연결 확인)
     print("Connecting to the drone...")
