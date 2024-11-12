@@ -15,7 +15,7 @@ const locaRouter = require('./routes/location');
 const saveLocationRouter = require('./routes/saveLocation');
 const moveDroneRouter = require('./routes/moveDrone');
 const socketRouter = require('./routes/socket_test');
-
+const saveLocation2Router = require('./routes/saveLocation2');
 
 const app = express();
 
@@ -68,6 +68,9 @@ app.use('/socketTest', (req, res, next) => {
     req.io = io; // `req` 객체에 `io`를 추가
     next();
 }, socketRouter);
+app.use('/saveLocation2', saveLocation2Router);
+
+
 
 app.use((req, res, next) => {
     res.status(404).send('Not Found');
