@@ -10,5 +10,13 @@
         <input type="number" id="chimneyNumber" name="chimneyNumber" required>
         <button type="submit">위치 측정</button>
     </form>
+
+    <script>
+        document.getElementById('chimneyForm').addEventListener('submit', (e) => {
+            const chimneyNumber = document.getElementById('chimneyNumber').value;
+            // 쿠키에 굴뚝 번호 저장
+            document.cookie = `chimneyNumber=${chimneyNumber}; path=/; max-age=${24 * 60 * 60}`;
+        });
+    </script>
 </body>
 </html>

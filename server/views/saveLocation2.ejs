@@ -4,6 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>좌표 저장</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        #consoleOutput {
+            background-color: #000;
+            color: #0f0;
+            padding: 10px;
+            border-radius: 5px;
+            height: 400px;
+            overflow-y: scroll;
+            h1 {
+            color: #333;
+        }
+        table {
+            border-collapse: collapse;
+            width: 50%;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        }
+    </style>
 </head>
 <body>
     <h1>좌표 저장</h1>
@@ -13,19 +47,50 @@
     </div>
 
     <!-- 측정 버튼 -->
-    <form action="/saveLocation/measure" method="POST">
+    <form action="/saveLocation2/measure" method="POST">
         <button type="submit">측정</button>
     </form>
+ 
+    <!-- 좌표 출력 -->
+    <table>
+        <thead>
+            <tr>
+                <th>축</th>
+                <th>값</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>X : </td>
+                <td><%= values && values[0] ? values[0] : '' %></td>
+            </tr>
+            <tr>
+                <td>Y : </td>
+                <td><%= values && values[1] ? values[1] : '' %></td>
+            </tr>
+            <tr>
+                <td>Z : </td>
+                <td><%= values && values[2] ? values[2] : '' %></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- 콘솔 출력 -->
+    <h3>Server Console Output</h3>
+    <div id="consoleOutput"></div>
+
+    <!-- Include the Socket.IO client library -->
+    <script src="/socket.io/socket.io.js"></script>
 
     <!-- 추가 버튼 -->
-    <form action="/saveLocation/add" method="POST">
+    <form action="/saveLocation2/add" method="POST">
         <input type="hidden" name="chimneyNumber" value="<%= chimneyNumber %>">
         <input type="hidden" name="slope" value="0">
         <button type="submit">추가</button>
     </form>
 
     <!-- 저장 버튼 -->
-    <form action="/saveLocation/save" method="POST">
+    <form action="/saveLocation2/save" method="POST">
         <input type="hidden" name="chimneyNumber" value="<%= chimneyNumber %>">
         <input type="hidden" name="slope" value="0">
         <button type="submit">저장</button>
