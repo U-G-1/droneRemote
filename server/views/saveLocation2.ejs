@@ -7,12 +7,28 @@
 </head>
 <body>
     <h1>좌표 저장</h1>
+    <div>
+        <label for="chimney">Select Chimney:</label>
+        <span id="chimney"><%= chimneyNumber %></span>
+    </div>
+
+    <!-- 측정 버튼 -->
+    <form action="/saveLocation/measure" method="POST">
+        <button type="submit">측정</button>
+    </form>
+
+    <!-- 추가 버튼 -->
+    <form action="/saveLocation/add" method="POST">
+        <input type="hidden" name="chimneyNumber" value="<%= chimneyNumber %>">
+        <input type="hidden" name="slope" value="0">
+        <button type="submit">추가</button>
+    </form>
+
+    <!-- 저장 버튼 -->
     <form action="/saveLocation/save" method="POST">
-        <div>
-            <label for="chimney">Select Chimney:</label>
-            <span id="chimney"><%= chimneyNumber %></span>
-        </div>
-        <button type="submit">Save</button>
+        <input type="hidden" name="chimneyNumber" value="<%= chimneyNumber %>">
+        <input type="hidden" name="slope" value="0">
+        <button type="submit">저장</button>
     </form>
 </body>
 </html>
