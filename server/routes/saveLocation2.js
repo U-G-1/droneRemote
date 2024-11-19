@@ -14,7 +14,7 @@ router.post('/', (req, res) => {
     });
     
     console.log(`Selected chimney number: ${chimneyNumber}`);
-    res.render('saveLocation2', { values: [] });
+    res.render('saveLocation2', { chimneyNumber, values: [] });
 });
 
 let x, y, z;  // 라우터 외부에서 선언
@@ -58,7 +58,7 @@ router.post('/measure', (req, res) => {
         x = parseFloat(xRaw);
         y = parseFloat(yRaw);
         z = parseFloat(zRaw);
-        res.render('saveLocation2', { values });
+        res.render('saveLocation2', {chimneyNumber, values });
 
         // 측정값 콘솔
         console.log('values : ',values);
@@ -89,7 +89,7 @@ router.post('/add', async (req, res) => {
             chim_num: chim_num
         });
 
-        res.redirect('/saveLocation2', { values }); 
+        res.redirect('/saveLocation2', {chimneyNumber, values }); 
         
     } catch (error) {
         console.error('Error saving location:', error); 
@@ -98,7 +98,36 @@ router.post('/add', async (req, res) => {
         // 500 상태 코드와 함께 오류 메시지 전송
     }
 });
+// 저장
+router.post('/save', async (req, res) => {
+    const chimneyNumber = req.cookies.chimneyNumber;
 
+    //같은 굴뚝이름의 최대 번호를 가져옴
+    const maxChimNum = await Location.max('chim_num', {
+        where: { chim_name: chimneyNumber } //*** */
+    });
+    const chim_num = maxChimNum !== null ? maxChimNum + 1 : 1;
+
+
+    try {
+        await Location.create({
+            loca_x: x, // 데이터베이스 `loca_x` 필드에 저장
+            loca_y: y, // 데이터베이스 `loca_y` 필드에 저장
+            loca_z: z, // 데이터베이스 `loca_z` 필드에 저장
+            slope:0, // `slope` 필드에 저장
+            chim_name: chimneyNumber,
+            chim_num: chim_num
+        });
+
+        res.redirect('/'); 
+        
+    } catch (error) {
+        console.error('Error saving location:', error); 
+        // 데이터베이스 작업 중 오류가 발생하면 콘솔에 출력
+        res.status(500).send('Error saving location'); 
+        // 500 상태 코드와 함께 오류 메시지 전송
+    }
+});
 
 
 

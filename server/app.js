@@ -16,6 +16,7 @@ const saveLocationRouter = require('./routes/saveLocation');
 const moveDroneRouter = require('./routes/moveDrone');
 const socketRouter = require('./routes/socket_test');
 const saveLocation2Router = require('./routes/saveLocation2');
+const moveDrone2Router = require('./routes/moveDrone2');
 
 const app = express();
 
@@ -69,6 +70,7 @@ app.use('/socketTest', (req, res, next) => {
     next();
 }, socketRouter);
 app.use('/saveLocation2', saveLocation2Router);
+app.use('/moveDrone2', moveDrone2Router);
 
 
 
