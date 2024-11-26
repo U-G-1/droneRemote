@@ -55,7 +55,7 @@ router.post('/move',async (req, res) => {
     // console.log('z :', z);
 
     // 파이썬 스크립트 경로 설정
-    const scriptPath = path.join(__dirname, '..', 'pyCode', 'moveDrone.py');
+    const scriptPath = path.join(__dirname, '..', 'pyCode', 'moveDrone2.py');
 
     // 파이썬 스크립트를 spawn으로 실행 매개변수 : chimney
     const pythonProcess = spawn('python', ['-u',scriptPath, ...coordinatesList.flat()]);
