@@ -45,6 +45,10 @@
         <label for="chimney">Select Chimney:</label>
         <span id="chimney"><%= chimneyNumber %></span>
     </div>
+    <div class="video-container">
+        <h2>Camera Feed</h2>
+        <video id="camera1" autoplay muted controls></video>
+    </div>
 
     <!-- 측정 버튼 -->
     <form action="/saveLocation2/measure" method="POST">
@@ -95,5 +99,20 @@
         <input type="hidden" name="slope" value="0">
         <button type="submit">저장</button>
     </form>
+
+    <!-- 스크립트 -->
+    <script>
+        // 카메라 도메인 설정
+        const camera1URL = "https://droneview.ngrok.app"; // 카메라 URL
+
+        // 비디오 태그에 스트림 URL 연결
+        const videoElement = document.getElementById("camera1");
+        videoElement.src = camera1URL;
+
+        // 오류 처리
+        videoElement.onerror = () => {
+            console.error('Failed to load camera stream');
+        };
+    </script>
 </body>
 </html>

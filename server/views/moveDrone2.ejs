@@ -32,6 +32,12 @@
         <label for="굴뚝3">코스3</label><br><br>
         <button type="submit">이동</button>
     </form>
+
+    <div class="video-container">
+        <h2>Camera Feeds</h2>
+        <video id="camera1" autoplay muted controls></video>
+    </div>
+
     <h3>Server Console Output</h3>
     <div id="consoleOutput"></div>
 
@@ -40,6 +46,11 @@
 
     <!-- Inline JavaScript to handle Socket.IO communication -->
     <script>
+
+        const camera1URL = "http://210.110.103.47:8000/index.html"; // 카메라 1 URL
+        
+        document.getElementById("camera1").src = camera1URL;
+
         // 페이지가 로드된 후 실행
         document.addEventListener("DOMContentLoaded", () => {
             // 클라이언트에서 서버로 Socket.IO 연결 생성

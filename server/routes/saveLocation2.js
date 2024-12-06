@@ -12,6 +12,15 @@ router.post('/', (req, res) => {
         httpOnly: true, // 클라이언트에서 JavaScript로 접근 불가 (보안 강화)
         maxAge: 24 * 60 * 60 * 1000, // 1일 유지
     });
+
+    // IP 주소 기반
+    const ipCameraURL = 'http://192.168.1.100:8080/video';
+    // 도메인 기반
+    // const domainCameraURL = 'http://mycamera.example.com:8080/video';
+    // Fetch 또는 Video 태그에서 사용
+    fetch(domainCameraURL)
+    .then(response => console.log('Stream started'))
+    .catch(err => console.error('Failed to fetch camera stream', err));
     
     console.log(`Selected chimney number: ${chimneyNumber}`);
     res.render('saveLocation2', { chimneyNumber, values: [] });
