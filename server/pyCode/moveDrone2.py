@@ -31,6 +31,32 @@ async def calculate_absolute_altitude(drone):
     cal_z = absolute_z + relative_z
     return cal_z
 
+def parse_coordinates(arguments):
+    """
+    서버로부터 받은 좌표를 파싱하여 x, y, z 값을 묶어서 반환
+    arguments: sys.argv[1:]로 전달된 좌표값 리스트
+    """
+    coordinates = []
+    for i in range(0, len(arguments), 3):
+        x = float(arguments[i])
+        y = float(arguments[i+1])
+        z = float(arguments[i+2])
+        coordinates.append((x, y, z))  # x, y, z를 한 묶음으로 저장
+    return coordinates
+
+async def move_to_position(drone, x, y, z):
+    """
+    드론을 특정 좌표로 이동
+    x, y, z: 이동할 좌표
+    """
+
+    try:
+        print(f"-- Moving to position: x={x}, y={y}, z={z}")
+        await drone.offboard.set_position_ned(PositionNedYaw(x, y, z, 0))  # 음수 z로 지정 (위로 올라가기 위해)
+        await asyncio.sleep(10)  # 좌표로 이동하는 데 소요될 시간 대기
+    except OffboardError as e:
+        print(f"Failed to move to position ({x}, {y}, {z}): {e}")
+
 async def wait_until_landed(drone):
     async for in_air in drone.telemetry.in_air():
         if not in_air:
@@ -45,9 +71,8 @@ def printArgs(n1,n2,n3):
 
 async def run():
     drone = System()
-    #await drone.connect(system_address="udp://:14540")
-    await drone.connect(system_address="serial///dev/ttyUSB0:921600") #드론용 연결 코드
-
+    await drone.connect(system_address="udp://:14540")
+    #connect(system_address="serial///dev/ttyUSB0:921600") #드론용 연결 코드
 
     print("Waiting for drone to connect...")
     async for state in drone.core.connection_state():
@@ -69,18 +94,15 @@ async def run():
     await drone.action.takeoff()
     await asyncio.sleep(15)
 
-    variables = {
-        'float_x_1':37.547959, 'float_y_1':127.1197124, 'float_z_1':11,
-        'float_x_2':37.5476953, 'float_y_2':127.1196159, 'float_z_2':11, 
-        'float_x_3':37.5476294, 'float_y_3':127.1199941, 'float_z_3':11,
-        'float_x_4':37.5479122, 'float_y_4':127.120104, 'float_z_4':11,
-    }
+     # 서버로부터 좌표값 받기
+    print("-- Parsing coordinates from server")
+    arguments = sys.argv[1:]  # 서버로부터 전달받은 좌표값 리스트
+    coordinates = parse_coordinates(arguments)
 
-    for i in range(1, 5):
-        print(f"-- 30s 소요 Moving to waypoint {i}")
-        print(f"서버로부터 받은 좌표 / {variables[f'float_x_{i}']}, {variables[f'float_y_{i}']}, {variables[f'float_z_{i}']}")
-        await drone.action.goto_location(variables[f"float_x_{i}"], variables[f"float_y_{i}"], variables[f"float_z_{i}"], 0)
-        await asyncio.sleep(60)
+    # 좌표 이동
+    print("-- Moving to specified coordinates")
+    for x, y, z in coordinates:
+        await move_to_position(drone, x, y, z)
 
     print("-- 20s 소요 Landing")
     await drone.action.land()
