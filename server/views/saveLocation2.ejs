@@ -45,9 +45,19 @@
         <label for="chimney">Select Chimney:</label>
         <span id="chimney"><%= chimneyNumber %></span>
     </div>
-    <div class="video-container">
+    <!-- <div class="video-container">
         <h2>Camera Feed</h2>
         <video id="camera1" autoplay muted controls></video>
+    </div> -->
+    <div class="video-container">
+        <h2>Camera Feeds</h2>
+        <iframe id="camera1" 
+                src="https://droneview.ngrok.app/index.html" 
+                width="100%" 
+                height="500" 
+                frameborder="0"
+                allowfullscreen>
+        </iframe>
     </div>
 
     <!-- 측정 버튼 -->
@@ -103,16 +113,16 @@
     <!-- 스크립트 -->
     <script>
         // 카메라 도메인 설정
-        const camera1URL = "https://droneview.ngrok.app"; // 카메라 URL
+        //const camera1URL = "https://droneview.ngrok.app"; // 카메라 URL
 
         // 비디오 태그에 스트림 URL 연결
-        const videoElement = document.getElementById("camera1");
-        videoElement.src = camera1URL;
+        //const videoElement = document.getElementById("camera1");
+        //videoElement.src = camera1URL;
 
         // 오류 처리
-        videoElement.onerror = () => {
-            console.error('Failed to load camera stream');
-        };
+        // videoElement.onerror = () => {
+        //     console.error('Failed to load camera stream');
+        // };
     </script>
 </body>
 </html>

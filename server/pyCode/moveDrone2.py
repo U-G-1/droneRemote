@@ -90,6 +90,36 @@ async def run():
     print("-- Moving to specified coordinates")
     for x, y, z in coordinates:
          await drone.action.goto_location(x, y, z, 0)
+         await asyncio.sleep(10)
+
+    """for idx, (x, y, z) in enumerate(coordinates):
+        try:
+            print(f"-- Moving to Point {idx + 1}: x={x}, y={y}, z={z}")
+            await drone.action.goto_location(x, y, z, 0)
+
+            # 이동 완료 확인
+            while True:
+                async for position in drone.telemetry.position():
+                    current_lat = position.latitude_deg
+                    current_lon = position.longitude_deg
+                    altitude = position.relative_altitude_m
+
+                    # 목표 지점 근처에 도달했는지 확인 (임계값 설정)
+                    if (
+                        abs(current_lat - x) < 0.00005 and
+                        abs(current_lon - y) < 0.00005 and
+                        abs(altitude - z) < 1.0
+                    ):
+                        print(f"--- Reached Point {idx + 1}")
+                        break
+
+                # 다음 좌표로 이동
+                await asyncio.sleep(1)
+
+        except Exception as e:
+            print(f"!!! Error at Point {idx + 1}: {e}")
+            continue
+"""
          
     await asyncio.sleep(10)
 
