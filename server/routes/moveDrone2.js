@@ -15,6 +15,7 @@ router.post('/move',async (req, res) => {
     console.log('드론 이동 실행');
     const chimneyNumber = req.body.chimney; // 선택된 굴뚝 번호를 가져옵니다.
     //const chimName = `굴뚝${chimneyNumber}`; // 선택된 굴뚝 번호에 해당하는 이름을 생성합니다.
+    
 
     console.log('chimneyNumber : ', chimneyNumber);
     if (!chimneyNumber) {
@@ -40,7 +41,7 @@ router.post('/move',async (req, res) => {
     ]);
     // 측정값 콘솔 출력
     coordinatesList.forEach((coords, index) => {
-        console.log(`Chimney ${index + 1}: x = ${coords[0]}, y = ${coords[1]}, z = ${coords[2]}`);
+        console.log(`Point ${index + 1}: x = ${coords[0]}, y = ${coords[1]}, z = ${coords[2]}`);
     });
 
     // // 좌표 값을 변수에 저장합니다.
