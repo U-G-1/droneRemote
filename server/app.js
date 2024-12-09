@@ -30,8 +30,8 @@ global.io = io;
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
-//app.set('port', process.env.port || 3000);
-app.set('port',  3000);
+app.set('port', process.env.port || 3000);
+//app.set('port',  3000);
 // app.set('view engine', 'html');
 // nunjucks.configure('./views', {
 //     express: app,
