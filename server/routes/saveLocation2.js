@@ -14,9 +14,9 @@ router.post('/', (req, res) => {
     });
 
     // IP 주소 기반
-    const ipCameraURL = 'http://192.168.1.100:8080/video';
+    //const ipCameraURL = 'http://192.168.1.100:8080/video';
     // 도메인 기반
-    // const domainCameraURL = 'http://mycamera.example.com:8080/video';
+     const domainCameraURL = 'https://droneview.ngrok.app/index.html';
     // Fetch 또는 Video 태그에서 사용
     fetch(domainCameraURL)
     .then(response => console.log('Stream started'))
