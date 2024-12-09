@@ -44,19 +44,6 @@ def parse_coordinates(arguments):
         coordinates.append((x, y, z))  # x, y, z를 한 묶음으로 저장
     return coordinates
 
-async def move_to_position(drone, x, y, z):
-    """
-    드론을 특정 좌표로 이동
-    x, y, z: 이동할 좌표
-    """
-
-    try:
-        print(f"-- Moving to position: x={x}, y={y}, z={z}")
-        await drone.offboard.set_position_ned(PositionNedYaw(x, y, z, 0))  # 음수 z로 지정 (위로 올라가기 위해)
-        await asyncio.sleep(10)  # 좌표로 이동하는 데 소요될 시간 대기
-    except OffboardError as e:
-        print(f"Failed to move to position ({x}, {y}, {z}): {e}")
-
 async def wait_until_landed(drone):
     async for in_air in drone.telemetry.in_air():
         if not in_air:
@@ -102,7 +89,9 @@ async def run():
     # 좌표 이동
     print("-- Moving to specified coordinates")
     for x, y, z in coordinates:
-        await move_to_position(drone, x, y, z)
+         await drone.action.goto_location(x, y, z, 0)
+         
+    await asyncio.sleep(10)
 
     print("-- 20s 소요 Landing")
     await drone.action.land()
